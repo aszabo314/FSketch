@@ -1,0 +1,12 @@
+source https://nuget.org/api/v2
+source https://vrvis.myget.org/F/aardvark_public/api/v2
+
+nuget Aardvark.Base ~> 1.6.23
+nuget Aardvark.Rendering ~> 1.6.19
+nuget FShade ~> 1.6.10
+
+group Build
+content: none
+source https://nuget.org/api/v2
+
+github vrvis/Aardvark.Fake:standalone
