@@ -1,0 +1,181 @@
+NUGET
+  remote: https://vrvis.myget.org/F/aardvark_public/api/v2
+  specs:
+    Aardvark.Application (1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+    Aardvark.Application.WinForms (1.7.4)
+      Aardvark.Application (>= 1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+    Aardvark.Application.WinForms.GL (1.7.4)
+      Aardvark.Application (>= 1.7.4)
+      Aardvark.Application.WinForms (>= 1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+      Aardvark.Rendering.GL (>= 1.7.4)
+    Aardvark.Base (1.6.56)
+      DevILSharp (>= 0.0.11 < 0.1.0)
+    Aardvark.Base.Essentials (1.6.56)
+      Aardvark.Base (>= 1.6.56)
+      Rx-Linq (>= 2.2.5 < 2.3.0)
+      System.Collections.Immutable (>= 1.1.36 < 1.2.0)
+    Aardvark.Base.FSharp (1.6.56)
+      Aardvark.Base (>= 1.6.56)
+      DevILSharp (>= 0.0.11 < 0.1.0)
+      FSharp.Compiler.Service (>= 0.0.90 < 0.1.0)
+      RegexProvider (>= 0.0.5 < 0.1.0)
+    Aardvark.Base.Incremental (1.6.56)
+      Aardvark.Base (>= 1.6.56)
+      Aardvark.Base.Essentials (>= 1.6.56)
+      Aardvark.Base.FSharp (>= 1.6.56)
+      FsPickler.Json (>= 1.8.0 < 1.9.0)
+      Rx-Core (>= 2.2.5 < 2.3.0)
+      Rx-Linq (>= 2.2.5 < 2.3.0)
+    Aardvark.Base.Rendering (1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+    Aardvark.Base.Runtime (1.6.56)
+      Aardvark.Base (1.6.56)
+      Aardvark.Base.Essentials (1.6.56)
+      Aardvark.Base.FSharp (1.6.56)
+      Aardvark.Base.Incremental (1.6.56)
+    Aardvark.Rendering.GL (1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+      Aardvark.Base.Runtime (>= 1.6.23 < 1.7.0)
+      FShade (>= 1.6.10 < 1.7.0)
+      FSharp.Quotations.Evaluator (>= 1.0.6 < 1.1.0)
+    Aardvark.Rendering.Interactive (1.7.4)
+      Aardvark.Application (>= 1.7.4)
+      Aardvark.Application.WinForms (>= 1.7.4)
+      Aardvark.Application.WinForms.GL (>= 1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+      Aardvark.Base.Runtime (>= 1.6.23 < 1.7.0)
+      Aardvark.Rendering.GL (>= 1.7.4)
+      Aardvark.Rendering.NanoVg (>= 1.7.4)
+      Aardvark.SceneGraph (>= 1.7.4)
+      FShade (>= 1.6.10 < 1.7.0)
+    Aardvark.Rendering.NanoVg (1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+      Aardvark.Rendering.GL (>= 1.7.4)
+      FShade (>= 1.6.10 < 1.7.0)
+      FSharp.Quotations.Evaluator (>= 1.0.6 < 1.1.0)
+      NanoVgSharp (>= 0.0.11 < 0.1.0)
+    Aardvark.SceneGraph (1.7.4)
+      Aardvark.Base.Incremental (>= 1.6.23 < 1.7.0)
+      Aardvark.Base.Rendering (>= 1.7.4)
+      FShade (>= 1.6.10 < 1.7.0)
+    FShade (1.6.10)
+      Aardvark.Base (>= 1.6.0 < 1.7.0)
+      Aardvark.Base.FSharp (>= 1.6.0 < 1.7.0)
+      FSharp.Compiler.Service (>= 0.0.90 < 0.1.0)
+    NanoVgSharp (0.0.11)
+      Aardvark.Base (>= 1.6.0 < 1.7.0)
+      Aardvark.Base.FSharp (>= 1.6.0 < 1.7.0)
+      Aardvark.Base.Incremental (>= 1.6.0 < 1.7.0)
+  remote: https://www.nuget.org/api/v2
+  specs:
+    DevILSharp (0.0.13)
+    FSharp.Compiler.Service (0.0.90)
+    FSharp.Quotations.Evaluator (1.0.7)
+    FsPickler (1.8.0)
+    FsPickler.Json (1.8.0)
+      FsPickler (1.8.0)
+      Newtonsoft.Json (>= 6.0.5)
+    Newtonsoft.Json (8.0.2)
+    RegexProvider (0.0.5)
+    Rx-Core (2.2.5)
+      Rx-Interfaces (>= 2.2.5)
+    Rx-Interfaces (2.2.5)
+    Rx-Linq (2.2.5)
+      Rx-Core (>= 2.2.5)
+      Rx-Interfaces (>= 2.2.5)
+    System.Collections (4.0.10) - framework: dnxcore50
+      System.Diagnostics.Debug (>= 4.0.0) - framework: dnxcore50
+      System.Resources.ResourceManager (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+      System.Runtime.Extensions (>= 4.0.0) - framework: dnxcore50
+      System.Threading (>= 4.0.0) - framework: dnxcore50
+    System.Collections.Immutable (1.1.37)
+      System.Collections (>= 4.0.0) - framework: dnxcore50
+      System.Diagnostics.Debug (>= 4.0.0) - framework: dnxcore50
+      System.Globalization (>= 4.0.0) - framework: dnxcore50
+      System.Linq (>= 4.0.0) - framework: dnxcore50
+      System.Resources.ResourceManager (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Runtime.Extensions (>= 4.0.0) - framework: dnxcore50
+      System.Threading (>= 4.0.0) - framework: dnxcore50
+    System.Diagnostics.Debug (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+    System.Globalization (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+    System.IO (4.0.10) - framework: dnxcore50
+      System.Globalization (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+      System.Text.Encoding (>= 4.0.0) - framework: dnxcore50
+      System.Text.Encoding (>= 4.0.10) - framework: dnxcore50
+      System.Text.Encoding.Extensions (>= 4.0.0) - framework: dnxcore50
+      System.Threading (>= 4.0.0) - framework: dnxcore50
+      System.Threading.Tasks (>= 4.0.0) - framework: dnxcore50
+    System.Linq (4.0.0) - framework: dnxcore50
+      System.Collections (>= 4.0.10) - framework: dnxcore50
+      System.Diagnostics.Debug (>= 4.0.10) - framework: dnxcore50
+      System.Resources.ResourceManager (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+      System.Runtime.Extensions (>= 4.0.10) - framework: dnxcore50
+    System.Private.Uri (4.0.0) - framework: dnxcore50
+    System.Reflection (4.0.10) - framework: dnxcore50
+      System.IO (>= 4.0.0) - framework: dnxcore50
+      System.Reflection.Primitives (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+    System.Reflection.Primitives (4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Threading (>= 4.0.0) - framework: dnxcore50
+    System.Resources.ResourceManager (4.0.0) - framework: dnxcore50
+      System.Globalization (>= 4.0.0) - framework: dnxcore50
+      System.Reflection (>= 4.0.0) - framework: dnxcore50
+      System.Reflection (>= 4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+    System.Runtime (4.0.20) - framework: dnxcore50
+      System.Private.Uri (>= 4.0.0) - framework: dnxcore50
+    System.Runtime.Extensions (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.20) - framework: dnxcore50
+    System.Text.Encoding (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+    System.Text.Encoding.Extensions (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Text.Encoding (>= 4.0.10) - framework: dnxcore50
+    System.Threading (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+      System.Threading.Tasks (>= 4.0.0) - framework: dnxcore50
+    System.Threading.Tasks (4.0.10) - framework: dnxcore50
+      System.Runtime (>= 4.0.0) - framework: dnxcore50
+
+GROUP Build
+CONTENT: NONE
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    Chessie (0.4.0) - content: none
+      FSharp.Core
+    FAKE (4.17.1) - content: none
+    FSharp.Core (4.0.0.1) - content: none
+    Mono.Cecil (0.9.5.4) - content: none
+    Newtonsoft.Json (8.0.2) - content: none
+    Paket.Core (2.48.0) - content: none
+      Chessie
+      FSharp.Core
+      Newtonsoft.Json
+    SourceLink.Fake (1.1.0) - content: none
+GITHUB
+  remote: vrvis/Aardvark.Fake
+  specs:
+    FULLPROJECT (99e54e4563ce1b97c950e7789146c008d327b843)
+      FAKE (>= 4.17.0 < 4.18.0)
+      Mono.Cecil (>= 0.9.5.4 < 0.9.6.0)
+      Paket.Core (2.48.0)
+      SourceLink.Fake (>= 1.1.0 < 1.2.0)
