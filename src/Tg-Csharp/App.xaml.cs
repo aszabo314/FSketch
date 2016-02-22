@@ -6,12 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Tg_Csharp
+namespace Tg
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public partial class CsharpApplication : Application
     {
     }
 }

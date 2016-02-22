@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Tg_Csharp
+namespace Tg
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,5 +24,8 @@ namespace Tg_Csharp
         {
             InitializeComponent();
         }
+
+        public ContentControl contentcontrol => (ContentControl)this.FindName("contentControl");
+        public Button mainbutton => (Button)this.FindName("superbutton");
     }
 }
