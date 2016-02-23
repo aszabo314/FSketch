@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="660" Width="1037">
+    <Window.Effect>
+        <DropShadowEffect/>
+    </Window.Effect>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="79*"/>
@@ -19,7 +22,17 @@
             <Button x:Name="superbutton" Content="Button" Margin="53,36,9,9"/>
         </Border>
         <ContentControl Content="ContentControl" x:Name="contentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="44,22,0,0" VerticalAlignment="Top" Height="30" Width="304"/>
-        <ContentControl Content="ContentControl" x:Name="otherControl" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="220" Width="497" Grid.ColumnSpan="2"/>
+        <ContentControl Content="ContentControl" x:Name="otherControl" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Opacity="0.5" Height="454" Width="1009">
+            <ContentControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="1" ScaleX="1"/>
+                    <SkewTransform AngleY="0" AngleX="0"/>
+                    <RotateTransform Angle="0"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ContentControl.RenderTransform>
+
+        </ContentControl>
 
     </Grid>
 </Window>

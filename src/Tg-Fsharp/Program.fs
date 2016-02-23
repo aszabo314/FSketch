@@ -21,7 +21,7 @@ open System.Windows
 module Program =
     module Stuff =
 
-        let rendering = 
+        let rendering() = 
                 
             let rc = RenderControl()
             let oglapp = new OpenGlApplication()
@@ -53,7 +53,7 @@ module Program =
             rc.RenderTask <- oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.NativeOptimized, sg)
             rc
     
-        let makeSomeMods =
+        let makeSomeMods() =
 
             let zahl = Mod.init 0
 
@@ -72,7 +72,7 @@ module Program =
         Aardvark.Init()
         Mod.initialize()
 
-        let (a,b) = Stuff.makeSomeMods
+        let (a,b) = Stuff.makeSomeMods()
 
 
         printfn "%A %A" (a |> Mod.force) (b |> Mod.force)
@@ -87,7 +87,7 @@ module Program =
         let disposable = b |> Mod.unsafeRegisterCallbackKeepDisposable ( fun v -> win.contentcontrol.Content <- v )
         win.mainbutton.Click.Add( fun _ -> transact ( fun _ -> (a |> Mod.force) + 1 |> Mod.change a) )
 
-        let r = Stuff.rendering
+        let r = Stuff.rendering()
 
         win.renderingcontrol.Content <- r :> obj
 
