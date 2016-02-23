@@ -18,7 +18,8 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="121">
             <Button x:Name="superbutton" Content="Button" Margin="53,36,9,9"/>
         </Border>
-        <ContentControl Content="ContentControl" x:Name="contentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="221" Width="376"/>
+        <ContentControl Content="ContentControl" x:Name="contentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="44,22,0,0" VerticalAlignment="Top" Height="30" Width="304"/>
+        <ContentControl Content="ContentControl" x:Name="otherControl" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="220" Width="497" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

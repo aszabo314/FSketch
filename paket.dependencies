@@ -3,6 +3,8 @@ source https://vrvis.myget.org/F/aardvark_public/api/v2
 
 nuget Aardvark.Base ~> 1.6.23
 nuget Aardvark.Rendering.Interactive ~> 1.7.1
+nuget Aardvark.Application ~> 1.7.1
+nuget Aardvark.Application.WPF.GL  ~> 1.7.1
 nuget FShade ~> 1.6.10
 
 group Build

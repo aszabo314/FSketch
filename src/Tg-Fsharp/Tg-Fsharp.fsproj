@@ -9,10 +9,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Tg_Fsharp</RootNamespace>
     <AssemblyName>Tg_Fsharp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>Tg-Fsharp</Name>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -115,6 +116,37 @@
       <ItemGroup>
         <Reference Include="Aardvark.Application.WinForms.GL">
           <HintPath>..\..\packages\Aardvark.Application.WinForms.GL\lib\net45\Aardvark.Application.WinForms.GL.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+      <ItemGroup>
+        <Reference Include="Aardvark.Application.WPF">
+          <HintPath>..\..\packages\Aardvark.Application.WPF\lib\net45\Aardvark.Application.WPF.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Xaml">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="UIAutomationTypes">
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="WindowsFormsIntegration">
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+      <ItemGroup>
+        <Reference Include="Aardvark.Application.WPF.GL">
+          <HintPath>..\..\packages\Aardvark.Application.WPF.GL\lib\net45\Aardvark.Application.WPF.GL.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
