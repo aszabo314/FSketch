@@ -24,9 +24,7 @@ namespace Tg
         {
             InitializeComponent();
         }
-
-        public ContentControl contentcontrol => (ContentControl)this.FindName("contentControl");
-        public ContentControl renderingcontrol => (ContentControl)this.FindName("otherControl");
-        public Button mainbutton => (Button)this.FindName("superbutton");
+        
+        public ContentControl renderingcontrol => (ContentControl)this.FindName("renderingGoesHere");
     }
 }

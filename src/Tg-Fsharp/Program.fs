@@ -52,40 +52,17 @@ module Program =
 
             rc.RenderTask <- oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.NativeOptimized, sg)
             rc
-    
-        let makeSomeMods() =
-
-            let zahl = Mod.init 0
-
-            let bam = 
-                adaptive {
-                    let! x = zahl
-                    return (x+1)*15
-                }
-            zahl,bam
         
 
     [<EntryPoint; STAThread>]
     let main argv = 
-        printfn "bam oida %A" argv
+
         Ag.initialize()
         Aardvark.Init()
         Mod.initialize()
 
-        let (a,b) = Stuff.makeSomeMods()
-
-
-        printfn "%A %A" (a |> Mod.force) (b |> Mod.force)
-    
-        transact( fun _ -> 123 |> Mod.change a)
-    
-        printfn "%A %A" (a |> Mod.force) (b |> Mod.force)
-
         let csapp = CsharpApplication()
         let win = MainWindow()
-
-        let disposable = b |> Mod.unsafeRegisterCallbackKeepDisposable ( fun v -> win.contentcontrol.Content <- v )
-        win.mainbutton.Click.Add( fun _ -> transact ( fun _ -> (a |> Mod.force) + 1 |> Mod.change a) )
 
         let r = Stuff.rendering()
 

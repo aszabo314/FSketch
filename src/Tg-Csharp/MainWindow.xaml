@@ -5,34 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="660" Width="1037">
-    <Window.Effect>
-        <DropShadowEffect/>
-    </Window.Effect>
+        Title="TG" Height="660" Width="1037">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="79*"/>
-            <RowDefinition Height="241*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="11*"/>
-            <ColumnDefinition Width="36*"/>
-        </Grid.ColumnDefinitions>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="121">
-            <Button x:Name="superbutton" Content="Button" Margin="53,36,9,9"/>
-        </Border>
-        <ContentControl Content="ContentControl" x:Name="contentControl" Grid.Column="1" HorizontalAlignment="Left" Margin="44,22,0,0" VerticalAlignment="Top" Height="30" Width="304"/>
-        <ContentControl Content="ContentControl" x:Name="otherControl" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Opacity="0.5" Height="454" Width="1009">
-            <ContentControl.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="1" ScaleX="1"/>
-                    <SkewTransform AngleY="0" AngleX="0"/>
-                    <RotateTransform Angle="0"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </ContentControl.RenderTransform>
-
-        </ContentControl>
-
+        <ContentControl Content="RENDER" x:Name="renderingGoesHere" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Height="610" Width="819"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="610" Margin="10,10,0,0" VerticalAlignment="Top" Width="185">
+            <TabItem Header="Terrain">
+                <Grid Background="#FFE5E5E5">
+                    <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="24" Margin="53,12,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="112"/>
+                    <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="155"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Rendering">
+                <Grid Background="#FFE5E5E5">
+                    <Slider x:Name="slider" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="155"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
