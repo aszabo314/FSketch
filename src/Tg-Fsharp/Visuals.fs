@@ -99,6 +99,7 @@ module Visuals =
                             let bottomrightpoint = corners.BotRight |> vfp
 
                             //orientation determines where the diagonal is (has to point toward the middle).
+                            //all vertices appear twice since they have different normals.
                             match cw with
                                 | Clockwise ->
                                     [| topleftpoint; toprightpoint; bottomrightpoint; topleftpoint; bottomrightpoint; bottomleftpoint |],
@@ -123,11 +124,7 @@ module Visuals =
 
                                     [| n012; n012; n012; n023; n023; n023 |]
 
-                        {
-                            Positions = positions
-                            Normals   = normals
-                            Colors    = colors
-                        } |> List.singleton
+                        positions, normals, colors
 
                     //there are successors, our result is the list of their results
                     | Some after ->                                     
@@ -135,20 +132,22 @@ module Visuals =
                         let TR = after.TopRight
                         let BL = after.BotLeft
                         let BR = after.BotRight
-                        [ 
-                            yield! floorGeometry TL.Corners Clockwise        TL.After
-                            yield! floorGeometry TR.Corners Counterclockwise TR.After
-                            yield! floorGeometry BL.Corners Counterclockwise BL.After
-                            yield! floorGeometry BR.Corners Clockwise        BR.After
-                        ]
+                        
+                        let (tlp, tln, tlc) = floorGeometry TL.Corners Clockwise        TL.After
+                        let (trp, trn, trc) = floorGeometry TR.Corners Counterclockwise TR.After
+                        let (blp, bln, blc) = floorGeometry BL.Corners Counterclockwise BL.After
+                        let (brp, brn, brc) = floorGeometry BR.Corners Clockwise        BR.After
+                        [tlp; trp; blp; brp] |> Array.concat,
+                        [tln; trn; bln; brn] |> Array.concat,
+                        [tlc; trc; blc; brc] |> Array.concat
+
+                        
             let floorISg ( floor : Floor ) =
-                Report.BeginTimed("Rendering for floor ")
+                Report.BeginTimed("Creating Visualization ")
                 let infos = floorGeometry floor.Corners Clockwise floor.After
                 let res =
                     let (indexedAttributes, indices) = 
-                        let pos = infos |> List.map ( fun i -> i.Positions ) |> Array.concat
-                        let norm = infos |> List.map ( fun i -> i.Normals ) |> Array.concat
-                        let col = infos |> List.map ( fun i -> i.Colors ) |> Array.concat
+                        let (pos, norm, col) = infos
                         [
                             DefaultSemantic.Positions, pos :> Array
                             DefaultSemantic.Normals, norm :> Array

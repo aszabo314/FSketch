@@ -12,7 +12,7 @@
             <TabItem Header="Terrain">
                 <Grid Background="#FFE5E5E5">
                     <Button x:Name="terrainGenerationButton" Content="Generate!" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="155" Height="37"/>
-                    <Slider x:Name="terrainGenerationLevel" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="112" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True"/>
+                    <Slider x:Name="terrainGenerationLevel" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="112" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True" Maximum="11"/>
                     <Label x:Name="TGLLabel" Content="{Binding ElementName=terrainGenerationLevel, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="22" Width="38" FontFamily="Trebuchet MS" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                         <Label.Background>
                             <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.5">
