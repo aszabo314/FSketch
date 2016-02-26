@@ -136,7 +136,7 @@ module Visuals =
                         let BL = after.BotLeft
                         let BR = after.BotRight
                         [ 
-                            yield! floorGeometry TL.Corners Clockwise        TL.After     //yield! is list concatenation
+                            yield! floorGeometry TL.Corners Clockwise        TL.After
                             yield! floorGeometry TR.Corners Counterclockwise TR.After
                             yield! floorGeometry BL.Corners Counterclockwise BL.After
                             yield! floorGeometry BR.Corners Clockwise        BR.After
@@ -146,13 +146,15 @@ module Visuals =
                 let infos = floorGeometry floor.Corners Clockwise floor.After
                 let res =
                     let (indexedAttributes, indices) = 
-                        let combined = infos |> List.fold ( fun xs x -> (x.Concat xs) ) RenderInfo.empty
+                        let pos = infos |> List.map ( fun i -> i.Positions ) |> Array.concat
+                        let norm = infos |> List.map ( fun i -> i.Normals ) |> Array.concat
+                        let col = infos |> List.map ( fun i -> i.Colors ) |> Array.concat
                         [
-                            DefaultSemantic.Positions, combined.Positions :> Array
-                            DefaultSemantic.Normals, combined.Normals :> Array
-                            DefaultSemantic.Colors, combined.Colors :> Array
+                            DefaultSemantic.Positions, pos :> Array
+                            DefaultSemantic.Normals, norm :> Array
+                            DefaultSemantic.Colors, col :> Array
                         ] |> SymDict.ofList,
-                        [ 0 .. ((combined.Positions |> Array.length) - 1) ] |> List.toArray
+                        [ 0 .. ((pos |> Array.length) - 1) ] |> List.toArray
 
                     let singleAttributes =
                         SymDict.empty
