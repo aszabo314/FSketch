@@ -5,17 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="TG" Height="660" Width="1037">
+        Title="TG" Height="660" Width="1199">
     <Grid>
-        <ContentControl Content="RENDER" x:Name="renderingGoesHere" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Height="610" Width="819"/>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="610" Margin="10,10,0,0" VerticalAlignment="Top" Width="185">
+        <ContentControl Content="RENDER" x:Name="renderingGoesHere" Margin="200,10,10,10"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="10,10,0,10" Width="185">
             <TabItem Header="Terrain">
                 <Grid Background="#FFE5E5E5">
-                    <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="24" Margin="53,12,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="112"/>
-                    <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="155"/>
-                    <Slider x:Name="terrainGenerationLevel" HorizontalAlignment="Left" Margin="53,68,0,0" VerticalAlignment="Top" Width="112" Maximum="6" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True"/>
-                    <Label x:Name="TGLLabel" Content="{Binding ElementName=terrainGenerationLevel, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top" Height="22" Width="38" FontFamily="Trebuchet MS" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Button x:Name="terrainGenerationButton" Content="Generate!" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="155" Height="37"/>
+                    <Slider x:Name="terrainGenerationLevel" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="112" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True"/>
+                    <Label x:Name="TGLLabel" Content="{Binding ElementName=terrainGenerationLevel, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="22" Width="38" FontFamily="Trebuchet MS" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                         <Label.Background>
                             <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.5">
                                 <LinearGradientBrush.RelativeTransform>
@@ -35,7 +33,13 @@
             </TabItem>
             <TabItem Header="Rendering">
                 <Grid Background="#FFE5E5E5">
-                    <Slider x:Name="slider" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="155"/>
+                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="155" CornerRadius="25" BorderBrush="Black">
+                        <Grid HorizontalAlignment="Left" Height="100" Margin="-1" VerticalAlignment="Top" Width="155">
+                            <Slider x:Name="TerrainScale" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Margin="10,37,0,0" Maximum="100" Minimum="1"/>
+                            <Label x:Name="label1" Content="Scale: " Margin="10,10,85,59"/>
+                            <Label x:Name="label2" Content="{Binding Value, ElementName=TerrainScale, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="116,10,0,0" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
                 </Grid>
             </TabItem>
         </TabControl>

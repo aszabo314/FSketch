@@ -29,16 +29,20 @@ module Terrain =
                 Height = h
             }
 
-    type Orientation = 
-        | Clockwise
-        | Counterclockwise
-
     type Floor = 
         {
             Corners : Fork<FloorPoint>
-            Way     : Orientation
             After   : Option<Fork<Floor>>
         }
+
+    module Rng =
+        module Context =
+            let random = new Random()
+
+        let random min max =
+            let res = Context.random.NextDouble()
+            let range = max - min
+            min + res * range
 
     module Algorithm =
         
@@ -56,9 +60,9 @@ module Terrain =
 //
 //        bottomleft - bottommiddle -- bottomright
 
-        let rec continueForks ( corners : Fork<FloorPoint> ) ( cw : Orientation ) ( level : int ) : Floor =
+        let rec continueForks ( corners : Fork<FloorPoint> ) ( level : int ) : Floor =
             match level with
-                | 0 -> { Corners = corners; Way = cw; After = None}
+                | 0 -> { Corners = corners; After = None}
                 | _ -> 
                     let nextlevel = level-1
 
@@ -72,28 +76,28 @@ module Terrain =
                     let bottommiddle = bottomleft.HalfwayTowards bottomright
                     let rightmiddle = topright.HalfwayTowards bottomright
 
-                    //center is average of all four corners
+                    //center is average of all four corners.
                     let oldCenterTLBR = topleft.HalfwayTowards bottomright
                     let oldCenterTRBL = topright.HalfwayTowards bottomleft
                     let oldCenter = oldCenterTLBR.HalfwayTowards oldCenterTRBL
 
                     //center has a random height. That's why its a fractal terrain.
-                    let random = 0.2 //todo
+                    let random = Rng.random -0.1 0.1
                     let center = { oldCenter with Height = oldCenter.Height + random }
 
                     {
                         Corners = corners
-                        Way     = cw
                         After   = 
                             Some {      
-                                TopLeft = continueForks { TopLeft = topleft; TopRight = topmiddle; BotLeft = leftmiddle; BotRight = center } Clockwise nextlevel
-                                TopRight= continueForks { TopLeft = topmiddle; TopRight = topright; BotLeft = center; BotRight = rightmiddle } Counterclockwise nextlevel
-                                BotLeft = continueForks { TopLeft = leftmiddle; TopRight = center; BotLeft = bottomleft; BotRight = bottommiddle } Counterclockwise nextlevel
-                                BotRight= continueForks { TopLeft = center; TopRight = rightmiddle; BotLeft = bottommiddle; BotRight = bottomright } Clockwise nextlevel
+                                TopLeft = continueForks { TopLeft = topleft; TopRight = topmiddle; BotLeft = leftmiddle; BotRight = center } nextlevel
+                                TopRight= continueForks { TopLeft = topmiddle; TopRight = topright; BotLeft = center; BotRight = rightmiddle } nextlevel
+                                BotLeft = continueForks { TopLeft = leftmiddle; TopRight = center; BotLeft = bottomleft; BotRight = bottommiddle } nextlevel
+                                BotRight= continueForks { TopLeft = center; TopRight = rightmiddle; BotLeft = bottommiddle; BotRight = bottomright } nextlevel
                             }
                     }
 
         let floor ( levels : int ) =
+            Report.BeginTimed("Terrain generation for {0} lvls", levels)
             let start = 
                 {
                     TopLeft = { Pos = V2d.OO; Height = 0.0 }
@@ -101,7 +105,9 @@ module Terrain =
                     BotLeft = { Pos = V2d.OI; Height = 0.0 }
                     BotRight = { Pos = V2d.II; Height = 0.0 }
                 }
-            continueForks start Clockwise levels
+            let res = continueForks start levels
+            Report.End() |> ignore
+            res
 
     let ofLevel ( level : IMod<int> ) =
         adaptive {

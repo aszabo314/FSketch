@@ -19,7 +19,38 @@ module Visuals =
     open Terrain    
 
     module Scenegraph =
-        
+
+        type Orientation = 
+            | Clockwise
+            | Counterclockwise
+
+
+        module RenderInfo =
+            
+            type RenderInfo =
+                {
+                    Positions : V3d[]
+                    Normals   : V3d[]
+                    Colors    : C4b[]
+                } with 
+                member this.Concat (other : RenderInfo) =
+                    {
+                        Positions = this.Positions  |> Array.append other.Positions
+                        Normals   = this.Normals    |> Array.append other.Normals
+                        Colors    = this.Colors     |> Array.append other.Colors
+                    }
+
+            let empty = 
+                {
+                    Positions = Array.empty
+                    Normals   = Array.empty
+                    Colors    = Array.empty
+                }
+
+        open RenderInfo
+                    
+                
+
         //represents one rendering context consisting of:
         // - one RenderControl ( = what you see )
         // - one Camera with controls and frustum
@@ -35,10 +66,9 @@ module Visuals =
             let frustum = 
                 adaptive {
                     let! ar = rc.Sizes
-                    return Frustum.perspective 60.0 0.1 100.0 (float ar.X/float ar.Y)
+                    return Frustum.perspective 60.0 0.1 1000.0 (float ar.X/float ar.Y)
                 }
 
-            
             let cam = 
                 let initialCam = CameraView.LookAt (V3d(0.0,0.0,0.0), V3d(6.0,1.0,1.0))
                 DefaultCameraController.control rc.Mouse rc.Keyboard rc.Time initialCam
@@ -47,29 +77,58 @@ module Visuals =
                 rc.RenderTask <- oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.NativeOptimized, sg)
 
         //this is a RenderControl that depends on one Floor as its content
-        let ofFloor ( floor : IMod<Terrain.Floor> ) =
+        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) =
             
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
 
+            let norms (v0:V3d) v1 v2 =
+                let oriented (n:V3d) =
+                    if n.Dot( V3d.OOI ) > Math.PI/2.0 then V3d(n.X,n.Y,-n.Z) else n
+
+                v0.Cross v1 |> oriented, v0.Cross v2 |> oriented
+
             let rec floorGeometry ( corners : Fork<FloorPoint> ) ( cw : Orientation ) ( after : Option<Fork<Floor>> ) =
                 match after with
                     //there are no successors, the result is a Sg made of the current geometry (list of single element)
-                    | None ->                                           
-                        let topleftpoint = corners.TopLeft      |> vfp
-                        let toprightpoint = corners.TopRight    |> vfp
-                        let bottomleftpoint = corners.BotLeft   |> vfp
-                        let bottomrightpoint = corners.BotRight |> vfp
+                    | None ->                         
+                        let (positions, colors, normals) = 
+                            let topleftpoint = corners.TopLeft      |> vfp
+                            let toprightpoint = corners.TopRight    |> vfp
+                            let bottomleftpoint = corners.BotLeft   |> vfp
+                            let bottomrightpoint = corners.BotRight |> vfp
 
-                        let positions = [| topleftpoint; toprightpoint; bottomrightpoint; bottomleftpoint |]
-                        let indices = 
+                            //orientation determines where the diagonal is (has to point toward the middle).
                             match cw with
-                                | Clockwise -> [|0;1;2; 0;2;3|]
-                                | Counterclockwise -> [|1;2;3; 1;3;0|]
+                                | Clockwise ->
+                                    [| topleftpoint; toprightpoint; bottomrightpoint; topleftpoint; bottomrightpoint; bottomleftpoint |],
+                                    [| C4b.White; C4b.White; C4b.White; C4b.White; C4b.White; C4b.White |],
 
-                        IndexedGeometry(IndexedGeometryMode.LineStrip, indices, SymDict.ofList [DefaultSemantic.Positions, positions :> Array], SymDict.empty)
-                            |> Sg.ofIndexedGeometry
-                            |> List.singleton
+                                    let v0 = (bottomrightpoint - topleftpoint).Normalized
+                                    let v1 = (toprightpoint    - topleftpoint).Normalized
+                                    let v2 = (bottomleftpoint  - topleftpoint).Normalized
+
+                                    let (n012,n023) = norms v0 v1 v2
+
+                                    [| n012; n012; n012; n023; n023; n023 |]
+                                | Counterclockwise ->
+                                    [| toprightpoint; bottomrightpoint; bottomleftpoint; toprightpoint; bottomleftpoint; topleftpoint |],
+                                    [| C4b.White; C4b.White; C4b.White; C4b.White; C4b.White; C4b.White |],
+
+                                    let v0 = (bottomleftpoint  - toprightpoint).Normalized
+                                    let v1 = (bottomrightpoint - toprightpoint).Normalized
+                                    let v2 = (topleftpoint     - toprightpoint).Normalized
+
+                                    let (n012,n023) = norms v0 v1 v2
+
+                                    [| n012; n012; n012; n023; n023; n023 |]
+
+                        {
+                            Positions = positions
+                            Normals   = normals
+                            Colors    = colors
+                        } |> List.singleton
+
                     //there are successors, our result is the list of their results
                     | Some after ->                                     
                         let TL = after.TopLeft
@@ -77,20 +136,40 @@ module Visuals =
                         let BL = after.BotLeft
                         let BR = after.BotRight
                         [ 
-                            yield! floorGeometry TL.Corners TL.Way TL.After     //yield! is list concatenation
-                            yield! floorGeometry TR.Corners TR.Way TR.After
-                            yield! floorGeometry BL.Corners BL.Way BL.After
-                            yield! floorGeometry BR.Corners BR.Way BR.After
+                            yield! floorGeometry TL.Corners Clockwise        TL.After     //yield! is list concatenation
+                            yield! floorGeometry TR.Corners Counterclockwise TR.After
+                            yield! floorGeometry BL.Corners Counterclockwise BL.After
+                            yield! floorGeometry BR.Corners Clockwise        BR.After
                         ]
             let floorISg ( floor : Floor ) =
-                floorGeometry floor.Corners floor.Way floor.After |> Sg.group'
+                Report.BeginTimed("Rendering for floor ")
+                let infos = floorGeometry floor.Corners Clockwise floor.After
+                let res =
+                    let (indexedAttributes, indices) = 
+                        let combined = infos |> List.fold ( fun xs x -> (x.Concat xs) ) RenderInfo.empty
+                        [
+                            DefaultSemantic.Positions, combined.Positions :> Array
+                            DefaultSemantic.Normals, combined.Normals :> Array
+                            DefaultSemantic.Colors, combined.Colors :> Array
+                        ] |> SymDict.ofList,
+                        [ 0 .. ((combined.Positions |> Array.length) - 1) ] |> List.toArray
+
+                    let singleAttributes =
+                        SymDict.empty
+
+                    IndexedGeometry(IndexedGeometryMode.TriangleList, indices, indexedAttributes, singleAttributes)
+                        |> Sg.ofIndexedGeometry
+
+                Report.End() |> ignore
+                res
 
             let sg = 
                 aset {
                     let! floor = floor
                     yield floorISg floor
                 }   |> Sg.set
-                    |> Sg.effect [DefaultSurfaces.trafo |> toEffect; DefaultSurfaces.constantColor C4f.White |> toEffect]
+                    |> Sg.effect [DefaultSurfaces.trafo |> toEffect; DefaultSurfaces.vertexColor |> toEffect; DefaultSurfaces.simpleLighting |> toEffect]
+                    |> Sg.trafo ( scale |> Mod.map ( fun s -> Trafo3d.Scale s ) )
                     |> Sg.viewTrafo ( Context.cam |> Mod.map ( fun v -> CameraView.viewTrafo v ))
                     |> Sg.projTrafo ( Context.frustum |> Mod.map ( fun v -> Frustum.projTrafo v))
             
@@ -103,8 +182,15 @@ module Visuals =
             let intOfString (v : obj) =
                 Int32.Parse(string obj)
 
-        let terrainGenerationLevelInput (win : MainWindow) =
+        let terrainGenerationLevelInput (win : MainWindow ) =
             let slider = win.terraingenerationlevelslider
+            let button = win.terraingenerationbutton
             let res = int slider.Value |> Mod.init
-            slider.ValueChanged.Add ( fun v -> transact ( fun _ -> int v.NewValue |> Mod.change res ))
+            button.Click.Add ( fun v -> transact ( fun _ -> 0 |> Mod.change res ); transact ( fun _ -> int slider.Value |> Mod.change res ))
+            res :> IMod<_>
+
+        let terrainScaleInput ( win : MainWindow ) =
+            let slider = win.terrainscaleslider
+            let res = float slider.Value |> Mod.init
+            slider.ValueChanged.Add ( fun v -> transact ( fun _ -> float v.NewValue |> Mod.change res ))
             res :> IMod<_>

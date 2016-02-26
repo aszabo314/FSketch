@@ -23,10 +23,11 @@ module Program =
         let win = MainWindow()
 
         let terrainlevel = XAMLHelpers.terrainGenerationLevelInput win
+        let scale = XAMLHelpers.terrainScaleInput win
 
         let floor = Terrain.ofLevel terrainlevel
 
-        let rendering = Visuals.Scenegraph.ofFloor floor
+        let rendering = Visuals.Scenegraph.ofFloor floor scale
 
         //RenderControl is a WPF ContentControl that contains some OpenGL rendering output. 
         //Set it as the child of some other visible control to display it.
