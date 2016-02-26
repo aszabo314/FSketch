@@ -2,57 +2,15 @@
 // See the 'F# Tutorial' project for more help.
 namespace Tg
 
-open Aardvark.Base
-open Aardvark.Base.Incremental
-
-open Aardvark.Rendering
-open Aardvark.Rendering.GL
-
-open Aardvark.SceneGraph
-open Aardvark.SceneGraph.Semantics
-
-open Aardvark.Application
-open Aardvark.Application.WPF       
-open Aardvark.Application.WPF     
-
 open System
 open System.Windows
 
+open Aardvark.Base
+open Aardvark.Base.Incremental     
+
+open Visuals
+
 module Program =
-    module Stuff =
-
-        let rendering() = 
-                
-            let rc = RenderControl()
-            let oglapp = new OpenGlApplication()
-            oglapp.Initialize(rc, 16)
-
-            let frustum = 
-                adaptive {
-                    let! ar = rc.Sizes
-                    return Frustum.perspective 60.0 0.1 100.0 (float ar.X/float ar.Y)
-                }
-
-            let initialCam = CameraView.LookAt (V3d(0.0,0.0,0.0), V3d(6.0,1.0,1.0))
-
-            let cam = 
-                DefaultCameraController.control rc.Mouse rc.Keyboard rc.Time initialCam
-
-
-            
-            let index = [|0;1;2; 0;2;3|]
-            let positions = [|V3f(-1,-1,0); V3f(1,-1,0); V3f(1,1,0); V3f(-1,1,0) |]
-
-            let sg =
-                IndexedGeometry(IndexedGeometryMode.TriangleList, index, SymDict.ofList [DefaultSemantic.Positions, positions :> Array], SymDict.empty)
-                    |> Sg.ofIndexedGeometry
-                    |> Sg.effect [DefaultSurfaces.trafo |> toEffect; DefaultSurfaces.constantColor C4f.White |> toEffect]
-                    |> Sg.viewTrafo ( cam |> Mod.map ( fun v -> CameraView.viewTrafo v ))
-                    |> Sg.projTrafo ( frustum |> Mod.map ( fun v -> Frustum.projTrafo v))
-
-            rc.RenderTask <- oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.NativeOptimized, sg)
-            rc
-        
 
     [<EntryPoint; STAThread>]
     let main argv = 
@@ -64,8 +22,14 @@ module Program =
         let csapp = CsharpApplication()
         let win = MainWindow()
 
-        let r = Stuff.rendering()
+        let terrainlevel = XAMLHelpers.terrainGenerationLevelInput win
 
-        win.renderingcontrol.Content <- r :> obj
+        let floor = Terrain.ofLevel terrainlevel
+
+        let rendering = Visuals.Scenegraph.ofFloor floor
+
+        //RenderControl is a WPF ContentControl that contains some OpenGL rendering output. 
+        //Set it as the child of some other visible control to display it.
+        win.renderingcontrol.Content <- rendering :> obj
 
         csapp.Run(win)

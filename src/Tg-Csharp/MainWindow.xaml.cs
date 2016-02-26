@@ -26,5 +26,6 @@ namespace Tg
         }
         
         public ContentControl renderingcontrol => (ContentControl)this.FindName("renderingGoesHere");
+        public Slider terraingenerationlevelslider => (Slider)this.FindName("terrainGenerationLevel");
     }
 }
