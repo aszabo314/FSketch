@@ -52,19 +52,22 @@ module Visuals =
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
 
-            let rec floorGeometry ( min : FloorPoint ) ( max : FloorPoint ) ( after : Option<Fork<Floor>> ) =
+            let rec floorGeometry ( corners : Fork<FloorPoint> ) ( cw : Orientation ) ( after : Option<Fork<Floor>> ) =
                 match after with
                     //there are no successors, the result is a Sg made of the current geometry (list of single element)
                     | None ->                                           
-                        let topleftpoint = min                          |> vfp
-                        let toprightpoint = min.XFullwayTowards max     |> vfp
-                        let bottomleftpoint = min.YFullwayTowards max   |> vfp
-                        let bottomrightpoint = max                      |> vfp
+                        let topleftpoint = corners.TopLeft      |> vfp
+                        let toprightpoint = corners.TopRight    |> vfp
+                        let bottomleftpoint = corners.BotLeft   |> vfp
+                        let bottomrightpoint = corners.BotRight |> vfp
 
                         let positions = [| topleftpoint; toprightpoint; bottomrightpoint; bottomleftpoint |]
-                        let indices = [|0;1;2; 0;2;3|]
+                        let indices = 
+                            match cw with
+                                | Clockwise -> [|0;1;2; 0;2;3|]
+                                | Counterclockwise -> [|1;2;3; 1;3;0|]
 
-                        IndexedGeometry(IndexedGeometryMode.TriangleList, indices, SymDict.ofList [DefaultSemantic.Positions, positions :> Array], SymDict.empty)
+                        IndexedGeometry(IndexedGeometryMode.LineStrip, indices, SymDict.ofList [DefaultSemantic.Positions, positions :> Array], SymDict.empty)
                             |> Sg.ofIndexedGeometry
                             |> List.singleton
                     //there are successors, our result is the list of their results
@@ -74,13 +77,13 @@ module Visuals =
                         let BL = after.BotLeft
                         let BR = after.BotRight
                         [ 
-                            yield! floorGeometry TL.Min TL.Max TL.After     //yield! is list concatenation
-                            yield! floorGeometry TR.Min TR.Max TR.After
-                            yield! floorGeometry BL.Min BL.Max BL.After
-                            yield! floorGeometry BR.Min BR.Max BR.After
+                            yield! floorGeometry TL.Corners TL.Way TL.After     //yield! is list concatenation
+                            yield! floorGeometry TR.Corners TR.Way TR.After
+                            yield! floorGeometry BL.Corners BL.Way BL.After
+                            yield! floorGeometry BR.Corners BR.Way BR.After
                         ]
             let floorISg ( floor : Floor ) =
-                floorGeometry floor.Min floor.Max floor.After |> Sg.group'
+                floorGeometry floor.Corners floor.Way floor.After |> Sg.group'
 
             let sg = 
                 aset {

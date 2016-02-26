@@ -28,19 +28,15 @@ module Terrain =
                 Pos    = V2d(x,y)
                 Height = h
             }
-        member self.XFullwayTowards (other : FloorPoint) =
-            let x = other.Pos.X
-            let y = self.Pos.Y
-            { other with Pos = V2d(x,y) }
-        member self.YFullwayTowards (other : FloorPoint) =
-            let x = self.Pos.X
-            let y = other.Pos.Y
-            { other with Pos = V2d(x,y) }
+
+    type Orientation = 
+        | Clockwise
+        | Counterclockwise
 
     type Floor = 
         {
-            Min     : FloorPoint
-            Max     : FloorPoint
+            Corners : Fork<FloorPoint>
+            Way     : Orientation
             After   : Option<Fork<Floor>>
         }
 
@@ -60,44 +56,54 @@ module Terrain =
 //
 //        bottomleft - bottommiddle -- bottomright
 
-        let rec continueForks ( min : FloorPoint ) ( max : FloorPoint ) ( level : int ) : Floor =
+        let rec continueForks ( corners : Fork<FloorPoint> ) ( cw : Orientation ) ( level : int ) : Floor =
             match level with
-                | 0 -> { Min = min; Max = max; After = None}
+                | 0 -> { Corners = corners; Way = cw; After = None}
                 | _ -> 
                     let nextlevel = level-1
 
-                    let topleft = min
-                    let topright = min.XFullwayTowards max
-                    let bottomleft = min.YFullwayTowards max
-                    let bottomright = max
+                    let topleft = corners.TopLeft
+                    let topright = corners.TopRight
+                    let bottomleft = corners.BotLeft
+                    let bottomright = corners.BotRight
                     
                     let topmiddle = topleft.HalfwayTowards topright
                     let leftmiddle = topleft.HalfwayTowards bottomleft
                     let bottommiddle = bottomleft.HalfwayTowards bottomright
                     let rightmiddle = topright.HalfwayTowards bottomright
 
+                    //center is average of all four corners
+                    let oldCenterTLBR = topleft.HalfwayTowards bottomright
+                    let oldCenterTRBL = topright.HalfwayTowards bottomleft
+                    let oldCenter = oldCenterTLBR.HalfwayTowards oldCenterTRBL
+
                     //center has a random height. That's why its a fractal terrain.
-                    let random = 0.0 //todo
-                    let oldCenter = topleft.HalfwayTowards bottomright
+                    let random = 0.2 //todo
                     let center = { oldCenter with Height = oldCenter.Height + random }
 
                     {
-                        Min = min
-                        Max = max
-                        After = 
-                            Some {      //FAIL - floor must have all 4 corners
-                                TopLeft = continueForks topleft center nextlevel
-                                TopRight= continueForks topmiddle rightmiddle nextlevel
-                                BotLeft = continueForks leftmiddle bottommiddle nextlevel
-                                BotRight= continueForks center bottomright nextlevel
+                        Corners = corners
+                        Way     = cw
+                        After   = 
+                            Some {      
+                                TopLeft = continueForks { TopLeft = topleft; TopRight = topmiddle; BotLeft = leftmiddle; BotRight = center } Clockwise nextlevel
+                                TopRight= continueForks { TopLeft = topmiddle; TopRight = topright; BotLeft = center; BotRight = rightmiddle } Counterclockwise nextlevel
+                                BotLeft = continueForks { TopLeft = leftmiddle; TopRight = center; BotLeft = bottomleft; BotRight = bottommiddle } Counterclockwise nextlevel
+                                BotRight= continueForks { TopLeft = center; TopRight = rightmiddle; BotLeft = bottommiddle; BotRight = bottomright } Clockwise nextlevel
                             }
                     }
 
         let floor ( levels : int ) =
-            continueForks { Pos = V2d.OO; Height = 0.0 } { Pos = V2d.II; Height = 1.0 } levels
+            let start = 
+                {
+                    TopLeft = { Pos = V2d.OO; Height = 0.0 }
+                    TopRight = { Pos = V2d.IO; Height = 0.0 }
+                    BotLeft = { Pos = V2d.OI; Height = 0.0 }
+                    BotRight = { Pos = V2d.II; Height = 0.0 }
+                }
+            continueForks start Clockwise levels
 
     let ofLevel ( level : IMod<int> ) =
-        
         adaptive {
             let! maxLv = level
             return Algorithm.floor maxLv
