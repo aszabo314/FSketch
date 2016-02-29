@@ -9,6 +9,7 @@ module Visuals =
 
     open Aardvark.Rendering
     open Aardvark.Rendering.GL
+    open Aardvark.Rendering.NanoVg
 
     open Aardvark.SceneGraph
     open Aardvark.SceneGraph.Semantics
@@ -74,7 +75,8 @@ module Visuals =
                 DefaultCameraController.control rc.Mouse rc.Keyboard rc.Time initialCam
                     
             let setRender (sg : ISg) = 
-                rc.RenderTask <- oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.NativeOptimized, sg)
+                rc.RenderTask <- 
+                    oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.ManagedOptimized, sg) |> DefaultOverlays.withStatistics
 
         //this is a RenderControl that depends on one Floor as its content
         let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) =
@@ -139,7 +141,7 @@ module Visuals =
                         let (brp, brn, brc) = floorGeometry BR.Corners Clockwise        BR.After
                         [tlp; trp; blp; brp] |> Array.concat,
                         [tln; trn; bln; brn] |> Array.concat,
-                        [tlc; trc; blc; brc] |> Array.concat
+                        [tlc; trc; blc; brc] |> Array.concat        //continuation monad
 
                         
             let floorISg ( floor : Floor ) =
@@ -153,7 +155,14 @@ module Visuals =
                             DefaultSemantic.Normals, norm :> Array
                             DefaultSemantic.Colors, col :> Array
                         ] |> SymDict.ofList,
-                        [ 0 .. ((pos |> Array.length) - 1) ] |> List.toArray
+                        let vc = ((pos |> Array.length) - 1)
+                        let indices = Array.init vc id
+
+                        Report.Line("Number vertices {0}", vc)
+                        Report.Line("Estimated size attributes: {0} MB", (float vc * 6.0 * 4.0 * 3.0)/1024.0/1024.0)
+
+                        indices
+                        
 
                     let singleAttributes =
                         SymDict.empty

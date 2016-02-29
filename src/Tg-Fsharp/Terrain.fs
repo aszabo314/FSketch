@@ -44,6 +44,13 @@ module Terrain =
             let range = max - min
             min + res * range
 
+        let gaussian mu sigma =
+            let u1 = Context.random.NextDouble()
+            let u2 = Context.random.NextDouble()
+            let randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                    Math.Sin(2.0 * Math.PI * u2)
+            mu + sigma * randStdNormal
+
     module Algorithm =
         
 //        2D terrain plan:
@@ -82,7 +89,8 @@ module Terrain =
                     let oldCenter = oldCenterTLBR.HalfwayTowards oldCenterTRBL
 
                     //center has a random height. That's why its a fractal terrain.
-                    let random = Rng.random -0.1 0.1
+                    //let random = Rng.random -0.1 0.1
+                    let random = Rng.gaussian 0.0 0.05
                     let center = { oldCenter with Height = oldCenter.Height + random }
 
                     {
