@@ -5,15 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="TG" Height="660" Width="1199">
+        Title="TG" Height="660" Width="1373">
     <Grid>
-        <ContentControl Content="RENDER" x:Name="renderingGoesHere" Margin="200,10,10,10"/>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="10,10,0,10" Width="185">
+        <ContentControl Content="RENDER" x:Name="renderingGoesHere" Margin="267,10,10,10"/>
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="10,10,0,10" Width="252">
             <TabItem Header="Terrain">
                 <Grid Background="#FFE5E5E5">
-                    <Button x:Name="terrainGenerationButton" Content="Generate!" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="155" Height="37"/>
-                    <Slider x:Name="terrainGenerationLevel" HorizontalAlignment="Left" Margin="53,10,0,0" VerticalAlignment="Top" Width="112" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True" Maximum="11"/>
-                    <Label x:Name="TGLLabel" Content="{Binding ElementName=terrainGenerationLevel, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="22" Width="38" FontFamily="Trebuchet MS" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*"/>
+                        <ColumnDefinition Width="13*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="terrainGenerationButton" Content="Generate!" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="222" Height="58" Grid.ColumnSpan="2"/>
+                    <Slider x:Name="terrainGenerationLevel" Margin="10,10,10,0" VerticalAlignment="Top" TickPlacement="BottomRight" SmallChange="1" Value="4" IsSnapToTickEnabled="True" Maximum="11" Grid.Column="1" Height="22"/>
+                    <Label x:Name="TGLLabel" Content="{Binding ElementName=terrainGenerationLevel, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="66,10,0,0" VerticalAlignment="Top" Height="22" FontFamily="Trebuchet MS" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="23">
                         <Label.Background>
                             <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" Opacity="0.5">
                                 <LinearGradientBrush.RelativeTransform>
@@ -29,6 +33,10 @@
                             </LinearGradientBrush>
                         </Label.Background>
                     </Label>
+                    <Label x:Name="label" Content="levels" HorizontalAlignment="Left" Margin="0,8,0,0" VerticalAlignment="Top" Height="26" Width="39"/>
+                    <Label x:Name="label3" Content="sigma" HorizontalAlignment="Left" Margin="0,39,0,0" VerticalAlignment="Top"/>
+                    <Slider x:Name="SigmaSlider" Grid.Column="1" Margin="10,43,10,0" VerticalAlignment="Top" Maximum="0.1" Value="0.001"/>
+                    <Label x:Name="label4" Content="{Binding ElementName=SigmaSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="42,39,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Rendering">

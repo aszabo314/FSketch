@@ -215,3 +215,10 @@ module Visuals =
             let res = float slider.Value |> Mod.init
             slider.ValueChanged.Add ( fun v -> transact ( fun _ -> float v.NewValue |> Mod.change res ))
             res :> IMod<_>
+
+        let sigmaInput ( win : MainWindow ) =
+            let slider = win.sigmaslider
+            let button = win.terraingenerationbutton
+            let res = float slider.Value |> Mod.init
+            button.Click.Add ( fun v -> transact ( fun _ -> 0.0 |> Mod.change res ); transact ( fun _ -> float slider.Value |> Mod.change res ))
+            res :> IMod<_>

@@ -24,8 +24,9 @@ module Program =
 
         let terrainlevel = XAMLHelpers.terrainGenerationLevelInput win
         let scale = XAMLHelpers.terrainScaleInput win
+        let sigma = XAMLHelpers.sigmaInput win
 
-        let floor = Terrain.ofLevel terrainlevel
+        let floor = Terrain.ofLevel terrainlevel sigma
 
         let rendering = Visuals.Scenegraph.ofFloor floor scale
 

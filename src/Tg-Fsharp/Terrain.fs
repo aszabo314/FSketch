@@ -67,7 +67,7 @@ module Terrain =
 //
 //        bottomleft - bottommiddle -- bottomright
 
-        let floor ( levels : int ) =
+        let floor ( levels : int ) ( sigma : float ) =
             let rec continueForks ( corners : Fork<FloorPoint> ) ( level : int ) : Floor =
                 match level with
                     | 0 -> { Corners = corners; After = None}
@@ -93,7 +93,7 @@ module Terrain =
 
                         let weight = float level / float levels
                         //let random = Rng.random -0.1 0.1
-                        let random = weight * Rng.gaussian 0.0 0.05
+                        let random = weight * Rng.gaussian 0.0 sigma
                         let center = { oldCenter with Height = oldCenter.Height + random }
 
                         {
@@ -119,9 +119,10 @@ module Terrain =
             Report.End() |> ignore
             res
 
-    let ofLevel ( level : IMod<int> ) =
+    let ofLevel ( level : IMod<int> ) ( sigma : IMod<float> ) =
         adaptive {
             let! maxLv = level
-            return Algorithm.floor maxLv
+            let! sigma = sigma
+            return Algorithm.floor maxLv sigma
         }
 
