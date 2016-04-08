@@ -203,12 +203,26 @@ module Visuals =
             let intOfString (v : obj) =
                 Int32.Parse(string obj)
 
+        module Events =
+            
+            // create a ModRef which is explicitly updated with the slider value each time a button is clicked
+            // c is a converter function for the slider value (ex. the cast function to int called 'int')
+            let sliderOnButton<'a> (c : float -> 'a) (button:System.Windows.Controls.Button) (slider:System.Windows.Controls.Slider) =
+                //new ModRef (slider initial value)
+                let res = c slider.Value |> Mod.init
+                //button callback that updates the ModRef
+                //since nothing happens when the value doesn't change (repeated button clicks), I do a dummy change before the actual change
+                button.Click.Add ( fun v -> transact ( fun _ -> Mod.change res Unchecked.defaultof<'a> ); transact ( fun _ -> c slider.Value |> Mod.change res ))
+                //expose the ModRef as IMod (read-only)
+                res :> IMod<_>
+
+            let floatSlider button slider = sliderOnButton float button slider
+            let intSlider   button slider = sliderOnButton int   button slider
+
         let terrainGenerationLevelInput (win : MainWindow ) =
             let slider = win.terraingenerationlevelslider
             let button = win.terraingenerationbutton
-            let res = int slider.Value |> Mod.init
-            button.Click.Add ( fun v -> transact ( fun _ -> 0 |> Mod.change res ); transact ( fun _ -> int slider.Value |> Mod.change res ))
-            res :> IMod<_>
+            Events.intSlider button slider
 
         let terrainScaleInput ( win : MainWindow ) =
             let slider = win.terrainscaleslider
@@ -219,6 +233,14 @@ module Visuals =
         let sigmaInput ( win : MainWindow ) =
             let slider = win.sigmaslider
             let button = win.terraingenerationbutton
-            let res = float slider.Value |> Mod.init
-            button.Click.Add ( fun v -> transact ( fun _ -> 0.0 |> Mod.change res ); transact ( fun _ -> float slider.Value |> Mod.change res ))
-            res :> IMod<_>
+            Events.floatSlider button slider
+
+        let roughnessInput ( win : MainWindow ) =
+            let slider = win.roughnessslider
+            let button = win.terraingenerationbutton
+            Events.sliderOnButton ( fun v -> (v - 0.5) * (-1.0) )  button slider
+
+        let flatnessInput ( win : MainWindow ) =
+            let slider = win.flatnessslider
+            let button = win.terraingenerationbutton
+            Events.floatSlider button slider

@@ -29,6 +29,8 @@ namespace Tg
         public Slider terraingenerationlevelslider => (Slider)this.FindName("terrainGenerationLevel");
         public Slider terrainscaleslider => (Slider)this.FindName("TerrainScale");
         public Slider sigmaslider => (Slider)this.FindName("SigmaSlider");
+        public Slider roughnessslider => (Slider)this.FindName("RoughnessSlider");
+        public Slider flatnessslider => (Slider)this.FindName("FlatnessSlider");
         public Button terraingenerationbutton => (Button)this.FindName("terrainGenerationButton");
     }
 }

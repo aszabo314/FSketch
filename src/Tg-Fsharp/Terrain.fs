@@ -51,6 +51,15 @@ module Terrain =
                                     Math.Sin(2.0 * Math.PI * u2)
             mu + sigma * randStdNormal
 
+        // A weird random number generator optimized for this terrain generation.
+        // Found by experimentation.
+        let funnyGaussian level maxlevel roughness flatness sigma =
+            let weightedSigma = pow sigma 2.0 / pow 2.0 (level * roughness)
+            let result = gaussian 0.0 weightedSigma
+            if (maxlevel-level) < float maxlevel * (2.0/3.0) then
+                 result / pow flatness 1.1
+            else result
+
     module Algorithm =
         
 //        2D terrain plan:
@@ -67,7 +76,7 @@ module Terrain =
 //
 //        bottomleft - bottommiddle -- bottomright
 
-        let floor ( levels : int ) ( sigma : float ) =
+        let floor ( levels : int ) ( sigma : float ) ( roughness : float ) ( flatness : float ) =
             let rec continueForks ( corners : Fork<FloorPoint> ) ( level : int ) : Floor =
                 match level with
                     | 0 -> { Corners = corners; After = None}
@@ -91,9 +100,7 @@ module Terrain =
 
                         //center has a random height. That's why its a fractal terrain.
 
-                        let weight = float level / float levels
-                        //let random = Rng.random -0.1 0.1
-                        let random = weight * Rng.gaussian 0.0 sigma
+                        let random = Rng.funnyGaussian (float level) (float levels) roughness flatness sigma
                         let center = { oldCenter with Height = oldCenter.Height + random }
 
                         {
@@ -119,10 +126,12 @@ module Terrain =
             Report.End() |> ignore
             res
 
-    let ofLevel ( level : IMod<int> ) ( sigma : IMod<float> ) =
+    let withParams ( level : IMod<int> ) ( sigma : IMod<float> ) ( roughness : IMod<float> ) ( flatness : IMod<float> ) =
         adaptive {
             let! maxLv = level
             let! sigma = sigma
-            return Algorithm.floor maxLv sigma
+            let! roughness = roughness
+            let! flatness = flatness
+            return Algorithm.floor maxLv sigma roughness flatness
         }
 

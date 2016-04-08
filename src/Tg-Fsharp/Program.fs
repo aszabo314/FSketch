@@ -22,11 +22,13 @@ module Program =
         let csapp = CsharpApplication()
         let win = MainWindow()
 
-        let terrainlevel = XAMLHelpers.terrainGenerationLevelInput win
-        let scale = XAMLHelpers.terrainScaleInput win
-        let sigma = XAMLHelpers.sigmaInput win
+        let terrainlevel =  XAMLHelpers.terrainGenerationLevelInput win
+        let scale =         XAMLHelpers.terrainScaleInput win
+        let sigma =         XAMLHelpers.sigmaInput win
+        let roughness =     XAMLHelpers.roughnessInput win
+        let flatness =      XAMLHelpers.flatnessInput win
 
-        let floor = Terrain.ofLevel terrainlevel sigma
+        let floor = Terrain.withParams terrainlevel sigma roughness flatness
 
         let rendering = Visuals.Scenegraph.ofFloor floor scale
 
