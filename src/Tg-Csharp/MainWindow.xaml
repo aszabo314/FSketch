@@ -43,6 +43,7 @@
                     <Label x:Name="label3_Copy1" Content="flatness" HorizontalAlignment="Left" Margin="0,101,0,0" VerticalAlignment="Top"/>
                     <Slider x:Name="FlatnessSlider" Grid.Column="1" Margin="10,105,10,0" VerticalAlignment="Top" Value="0.1" Minimum="0.1" Maximum="7"/>
                     <Label x:Name="label4_Copy1" Content="{Binding Value, ElementName=FlatnessSlider, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="61,101,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="waterEnabledCheckbox" Content="Water" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Rendering">

@@ -7,6 +7,7 @@ open System.Windows
 
 open Aardvark.Base
 open Aardvark.Base.Incremental     
+open Aardvark.Application.WPF
 
 open Visuals
 
@@ -28,9 +29,11 @@ module Program =
         let roughness =     XAMLHelpers.roughnessInput win
         let flatness =      XAMLHelpers.flatnessInput win
 
+        let waterEnabled =  XAMLHelpers.waterEnabledInput win
+
         let floor = Terrain.withParams terrainlevel sigma roughness flatness
 
-        let rendering = Visuals.Scenegraph.ofFloor floor scale
+        let rendering : RenderControl = Visuals.Scenegraph.ofFloor floor scale waterEnabled
 
         //RenderControl is a WPF ContentControl that contains some OpenGL rendering output. 
         //Set it as the child of some other visible control to display it.

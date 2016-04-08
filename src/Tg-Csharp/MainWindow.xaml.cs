@@ -31,6 +31,7 @@ namespace Tg
         public Slider sigmaslider => (Slider)this.FindName("SigmaSlider");
         public Slider roughnessslider => (Slider)this.FindName("RoughnessSlider");
         public Slider flatnessslider => (Slider)this.FindName("FlatnessSlider");
+        public CheckBox waterenabledcheckbox => (CheckBox)this.FindName("waterEnabledCheckbox");
         public Button terraingenerationbutton => (Button)this.FindName("terrainGenerationButton");
     }
 }

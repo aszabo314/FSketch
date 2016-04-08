@@ -20,6 +20,40 @@ module Visuals =
     
     open Terrain    
 
+    module Shader = 
+        open FShade
+        open DefaultSurfaces
+        
+        // if water is enabled, every vertex with z-coordinate below 0 is rendered at 0
+        // can not currently use the record copy syntax { v with pos = newpos } because of a bug (program will crash)
+        let withWater ( water : IMod<bool> ) ( v : Vertex ) =
+            vertex {
+                let waterenabled = !!water
+                if waterenabled then
+                     let vz = if v.pos.Z < 0.0 then 0.0 else v.pos.Z
+                     let newpos = V4d(v.pos.X, v.pos.Y, vz, v.pos.W)
+                     return 
+                        {
+                            pos =   newpos
+                            wp =    v.wp
+                            n =     v.n
+                            b =     v.b
+                            t =     v.t
+                            c =     v.c
+                            tc =    v.tc
+                        }
+                else return   
+                        {
+                            pos =   v.pos
+                            wp =    v.wp
+                            n =     v.n
+                            b =     v.b
+                            t =     v.t
+                            c =     v.c
+                            tc =    v.tc
+                        }
+            }
+
     module Scenegraph =
 
         type Orientation = 
@@ -81,7 +115,7 @@ module Visuals =
 //                        |> DefaultOverlays.withStatistics
 
         //this is a RenderControl that depends on one Floor as its content
-        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) =
+        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( waterEnabled : IMod<bool> ) =
             
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
@@ -189,7 +223,10 @@ module Visuals =
                     let! floor = floor
                     yield floorISg floor
                 }   |> Sg.set
-                    |> Sg.effect [DefaultSurfaces.trafo |> toEffect; DefaultSurfaces.vertexColor |> toEffect; DefaultSurfaces.simpleLighting |> toEffect]
+                    |> Sg.effect [  Shader.withWater waterEnabled   |> toEffect
+                                    DefaultSurfaces.trafo           |> toEffect 
+                                    DefaultSurfaces.vertexColor     |> toEffect 
+                                    DefaultSurfaces.simpleLighting  |> toEffect]
                     |> Sg.trafo ( scale |> Mod.map ( fun s -> Trafo3d.Scale s ) )
                     |> Sg.viewTrafo ( Context.cam |> Mod.map ( fun v -> CameraView.viewTrafo v ))
                     |> Sg.projTrafo ( Context.frustum |> Mod.map ( fun v -> Frustum.projTrafo v))
@@ -204,7 +241,15 @@ module Visuals =
                 Int32.Parse(string obj)
 
         module Events =
+
+            //why
+            let private wtf (b : Nullable<bool>) = if not b.HasValue then false else b.Value
             
+            let modCheckbox (checkbox:System.Windows.Controls.CheckBox) =
+                let res = wtf checkbox.IsChecked |> Mod.init
+                checkbox.Click.Add ( fun v -> transact ( fun _ -> Mod.change res <| wtf checkbox.IsChecked) )
+                res :> IMod<_>
+
             // create a ModRef which is explicitly updated with the slider value each time a button is clicked
             // c is a converter function for the slider value (ex. the cast function to int called 'int')
             let sliderOnButton<'a> (c : float -> 'a) (button:System.Windows.Controls.Button) (slider:System.Windows.Controls.Slider) =
@@ -244,3 +289,6 @@ module Visuals =
             let slider = win.flatnessslider
             let button = win.terraingenerationbutton
             Events.floatSlider button slider
+
+        let waterEnabledInput ( win : MainWindow ) =
+            win.waterenabledcheckbox |> Events.modCheckbox
