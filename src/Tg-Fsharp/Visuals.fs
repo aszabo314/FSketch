@@ -18,7 +18,7 @@ module Visuals =
     open Aardvark.Application
     open Aardvark.Application.WPF   
     
-    open Terrain    
+    open Terrain
 
     module Shader = 
         open FShade
@@ -35,6 +35,44 @@ module Visuals =
                      return 
                         {
                             pos =   newpos
+                            wp =    v.wp
+                            n =     v.n
+                            b =     v.b
+                            t =     v.t
+                            c =     v.c
+                            tc =    v.tc
+                        }
+                else return   
+                        {
+                            pos =   v.pos
+                            wp =    v.wp
+                            n =     v.n
+                            b =     v.b
+                            t =     v.t
+                            c =     v.c
+                            tc =    v.tc
+                        }
+            }
+
+        let withColor ( enabled : IMod<bool> ) ( colors : IMod<V4d[]> ) ( heights : IMod<float[]> ) ( v : Vertex ) =
+            let linear (x : float) (cs : V4d[]) (hs : float[]) : V4d =
+                let mutable currentIndex = 0
+                let mutable lastIndex = 0
+                let mutable running = true
+                while running do
+                    failwith ""
+                failwith ""
+
+
+            vertex {
+                let enabled = !!enabled
+                if enabled then
+                    let cs = !!colors
+                    let hs = !!heights
+                    let height = v.pos.Z
+                    return   
+                        {
+                            pos =   v.pos
                             wp =    v.wp
                             n =     v.n
                             b =     v.b
@@ -115,7 +153,8 @@ module Visuals =
 //                        |> DefaultOverlays.withStatistics
 
         //this is a RenderControl that depends on one Floor as its content
-        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( waterEnabled : IMod<bool> ) =
+        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( waterEnabled : IMod<bool> )
+                    ( colors : IMod<C4f[] * float[]>) =
             
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
@@ -219,6 +258,9 @@ module Visuals =
                 res
 
             let sg = 
+                let c = colors |> Mod.map fst
+                let h = colors |> Mod.map snd
+                
                 aset {
                     let! floor = floor
                     yield floorISg floor

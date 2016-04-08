@@ -135,3 +135,15 @@ module Terrain =
             return Algorithm.floor maxLv sigma roughness flatness
         }
 
+module Color =
+    
+    // given a linear map and upperRanges between [0,1], calculate a color for a given 
+    // height value, using linear interpolation for the array of ranges (starting at 0)
+    // and corresponding colors.
+
+    let linearMap ( height : float ) ( colorsAndUpperRanges : list< C4f * float > ) : V4d = 
+        match colorsAndUpperRanges 
+            |> List.filter ( fun (_,ur) -> height < ur) 
+            |> List.rev with
+        | [] -> C4f.Red.ToV4d()
+        | (color,_)::_ -> color.ToV4d()
