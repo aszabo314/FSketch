@@ -59,6 +59,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorPicker\DropDownCustomColorPicker.csproj">
+      <Name>DropDownCustomColorPicker</Name>
+      <Project>{fd2ec7d4-4316-4f8f-8108-8381f0b4b340}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Tg-Csharp\Tg-Csharp.csproj">
       <Name>Tg-Csharp</Name>
       <Project>{4d199fa5-7942-4277-9e09-9b60523abe2e}</Project>

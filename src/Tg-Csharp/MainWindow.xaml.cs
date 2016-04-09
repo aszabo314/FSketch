@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DropDownCustomColorPicker;
 
 namespace Tg
 {
@@ -23,6 +24,16 @@ namespace Tg
         public MainWindow()
         {
             InitializeComponent();
+
+            colorpicker0.SelectedColor = Color.FromArgb(255, 252, 230, 81 );
+            colorpicker1.SelectedColor = Color.FromArgb(255, 212, 187, 76 );
+            colorpicker2.SelectedColor = Color.FromArgb(255, 181, 170, 123);
+            colorpicker3.SelectedColor = Color.FromArgb(255, 118, 219, 18 );
+            colorpicker4.SelectedColor = Color.FromArgb(255, 133, 237, 28 );
+            colorpicker5.SelectedColor = Color.FromArgb(255, 129, 201, 142);
+            colorpicker6.SelectedColor = Color.FromArgb(255, 154, 181, 160);
+            colorpicker7.SelectedColor = Color.FromArgb(255, 242, 244, 245);
+
         }
         
         public ContentControl renderingcontrol => (ContentControl)this.FindName("renderingGoesHere");
@@ -37,5 +48,25 @@ namespace Tg
         public Label camerapositionlabel => (Label)this.FindName("CameraPosition");
         public Label maxheightlabel => (Label)this.FindName("PeakLabel");
         public Label minheightlabel => (Label)this.FindName("ValleyLabel");
+
+        //Color Picker by Razan Paul at: http://www.codeproject.com/Articles/42849/Making-a-Drop-Down-Style-Custom-Color-Picker-in-WP
+        public CustomColorPicker colorpicker0 => (CustomColorPicker)this.FindName("ColorPicker0");
+        public CustomColorPicker colorpicker1 => (CustomColorPicker)this.FindName("ColorPicker1");
+        public CustomColorPicker colorpicker2 => (CustomColorPicker)this.FindName("ColorPicker2");
+        public CustomColorPicker colorpicker3 => (CustomColorPicker)this.FindName("ColorPicker3");
+        public CustomColorPicker colorpicker4 => (CustomColorPicker)this.FindName("ColorPicker4");
+        public CustomColorPicker colorpicker5 => (CustomColorPicker)this.FindName("ColorPicker5");
+        public CustomColorPicker colorpicker6 => (CustomColorPicker)this.FindName("ColorPicker6");
+        public CustomColorPicker colorpicker7 => (CustomColorPicker)this.FindName("ColorPicker7");
+
+        public Slider rangepicker0 => (Slider)this.FindName("RangePicker0");
+        public Slider rangepicker1 => (Slider)this.FindName("RangePicker1");
+        public Slider rangepicker2 => (Slider)this.FindName("RangePicker2");
+        public Slider rangepicker3 => (Slider)this.FindName("RangePicker3");
+        public Slider rangepicker4 => (Slider)this.FindName("RangePicker4");
+        public Slider rangepicker5 => (Slider)this.FindName("RangePicker5");
+        public Slider rangepicker6 => (Slider)this.FindName("RangePicker6");
+        public Slider rangepicker7 => (Slider)this.FindName("RangePicker7");
+        
     }
 }

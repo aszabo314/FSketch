@@ -7,6 +7,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tg-Fsharp", "Tg-Fsharp\Tg-F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tg-Csharp", "Tg-Csharp\Tg-Csharp.csproj", "{4D199FA5-7942-4277-9E09-9B60523ABE2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DropDownCustomColorPicker", "ColorPicker\DropDownCustomColorPicker.csproj", "{FD2EC7D4-4316-4F8F-8108-8381F0B4B340}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4D199FA5-7942-4277-9E09-9B60523ABE2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D199FA5-7942-4277-9E09-9B60523ABE2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D199FA5-7942-4277-9E09-9B60523ABE2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD2EC7D4-4316-4F8F-8108-8381F0B4B340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD2EC7D4-4316-4F8F-8108-8381F0B4B340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD2EC7D4-4316-4F8F-8108-8381F0B4B340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD2EC7D4-4316-4F8F-8108-8381F0B4B340}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

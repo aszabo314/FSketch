@@ -23,6 +23,33 @@ module Visuals =
     module Shader = 
         open FShade
         open DefaultSurfaces
+
+        // the types of uniforms can be unboxed like this.
+        type UniformScope with
+            member x.Color0 : V4d =   uniform?Color0
+            member x.Color1 : V4d =   uniform?Color1
+            member x.Color2 : V4d =   uniform?Color2
+            member x.Color3 : V4d =   uniform?Color3
+            member x.Color4 : V4d =   uniform?Color4
+            member x.Color5 : V4d =   uniform?Color5
+            member x.Color6 : V4d =   uniform?Color6
+            member x.Color7 : V4d =   uniform?Color7
+            member x.Range0 : float = uniform?Range0
+            member x.Range1 : float = uniform?Range1
+            member x.Range2 : float = uniform?Range2
+            member x.Range3 : float = uniform?Range3
+            member x.Range4 : float = uniform?Range4
+            member x.Range5 : float = uniform?Range5
+            member x.Range6 : float = uniform?Range6
+            member x.Range7 : float = uniform?Range7
+
+        // using this function to set all my uniforms, because I can't seem to use arrays.
+        let setUniformColorsAndRanges (colors : IMod<V4d[]>) (ranges : IMod<float[]>) (maxIndex : int) (sg : ISg) : ISg =
+            let mutable osg = sg
+            for i in 0..maxIndex do
+                osg <- osg |> Sg.uniform (sprintf "Color%A" i) (colors |> Mod.map ( fun arr -> arr.[i] ))
+                           |> Sg.uniform (sprintf "Range%A" i) (ranges |> Mod.map ( fun arr -> arr.[i] ))
+            osg
         
         // if water is enabled, every vertex with z-coordinate below 0 is rendered at 0
         // can not currently use the record copy syntax { v with pos = newpos } because of a bug (program will crash)
@@ -31,15 +58,17 @@ module Visuals =
                 let waterenabled = !!water
                 if waterenabled then
                      let vz = if v.pos.Z < 0.0 then 0.0 else v.pos.Z
+                     let newcol = if v.pos.Z < 0.0 then V4d(0.0,0.0,1.0,1.0) else v.c
                      let newpos = V4d(v.pos.X, v.pos.Y, vz, v.pos.W)
+                     let newnorm = if v.pos.Z < 0.0 then V3d(0.0,0.0,1.0) else v.n
                      return 
                         {
                             pos =   newpos
                             wp =    v.wp
-                            n =     v.n
+                            n =     newnorm
                             b =     v.b
                             t =     v.t
-                            c =     v.c
+                            c =     newcol
                             tc =    v.tc
                         }
                 else return   
@@ -54,44 +83,52 @@ module Visuals =
                         }
             }
 
-        let withColor ( enabled : IMod<bool> ) ( colors : V4d[] ) ( heights : float[] ) ( maxIndex : int ) 
-                      ( minTerrainHeight : IMod<float> ) ( maxTerrainHeight : IMod<float> ) ( v : Vertex ) =
-
-            
-//                    let ocol = 
-//                        let mutable currentIndex = 0
-//                        let mutable lastIndex = 0
-//                        let mutable running = true
-//                        let mutable outColor = V4d(1.0,1.0,1.0,1.0)
-//                        while running do
-//                            if currentIndex < maxIndex then
-//                                let height = hs.[currentIndex]
-//                                if height < normheight then 
-//                                    //found
-//                                    outColor <- cs.[lastIndex]
-//                                    running <- false
-//                                else
-//                                    //not found
-//                                    lastIndex <- currentIndex
-//                                    currentIndex <- currentIndex + 1
-//                            else //last one
-//                                outColor <- cs.[maxIndex]
-//                                running <- false
-//                        outColor
-
+        let withColor ( enabled : IMod<bool> ) ( minTerrainHeight : IMod<float> ) ( maxTerrainHeight : IMod<float> ) ( v : Vertex ) =
             vertex {
-
+                let color0 = uniform.Color0
+                let color1 = uniform.Color1
+                let color2 = uniform.Color2
+                let color3 = uniform.Color3
+                let color4 = uniform.Color4
+                let color5 = uniform.Color5
+                let color6 = uniform.Color6
+                let color7 = uniform.Color7
+                let range0 = uniform.Range0
+                let range1 = uniform.Range1
+                let range2 = uniform.Range2
+                let range3 = uniform.Range3
+                let range4 = uniform.Range4
+                let range5 = uniform.Range5
+                let range6 = uniform.Range6
+                let range7 = uniform.Range7
+                let maxIndex = 8
                 let enabled = !!enabled
                 if enabled then
-                    let cs = colors
-                    let hs = heights
                     let smallest = !!minTerrainHeight
                     let biggest = !!maxTerrainHeight
                     let maxIdx = float maxIndex
                     let height = v.pos.Z
                     let normheight = ( height - smallest ) / ( biggest - smallest )
-                    let idx = int (round(normheight * maxIdx))
-                    let ocol = cs.[idx]
+                    let idx = int (floor(normheight * maxIdx))
+                    let oh = if      idx = 0 then range0
+                             else if idx = 1 then range1
+                             else if idx = 2 then range2
+                             else if idx = 3 then range3
+                             else if idx = 4 then range4
+                             else if idx = 5 then range5
+                             else if idx = 6 then range6
+                             else if idx = 7 then range7
+                             else range7
+                    let nh = int (floor(oh * maxIdx))
+                    let ocol = if      nh = 0 then color0
+                               else if nh = 1 then color1
+                               else if nh = 2 then color2
+                               else if nh = 3 then color3
+                               else if nh = 4 then color4
+                               else if nh = 5 then color5
+                               else if nh = 6 then color6
+                               else if nh = 7 then color7
+                               else color7
                     return   
                         {
                             pos =   v.pos
@@ -176,7 +213,7 @@ module Visuals =
 
         //this is a RenderControl that depends on one Floor as its content
         let ofFloor ( floor : IMod<Terrain.Floor * float * float > ) ( scale : IMod<float> ) ( height : IMod<float> ) 
-                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[] * float[] * int>) =
+                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[]> ) ( colorranges : IMod<float[]> ) =
             
             let minHeight = floor |> Mod.map ( fun (_,x,_) -> x )
             let maxHeight = floor |> Mod.map ( fun (_,_,x) -> x )
@@ -284,18 +321,21 @@ module Visuals =
                 res
 
             let sg = 
-                let c =  colors |> Mod.map ( fun (x,_,_) -> x |> Array.map ( fun c -> c.ToV4d() ) ) |> Mod.force
-                let h =  colors |> Mod.map ( fun (_,x,_) -> x ) |> Mod.force
-                let mi = colors |> Mod.map ( fun (_,_,x) -> x ) |> Mod.force
+                let c =  colors |> Mod.map ( fun c -> c |> Array.map ( fun v -> v.ToV4d() ) )
+                let mi = c |> Mod.force |> Array.length
                 
-                let colorShader = Shader.withColor (Mod.constant true) c h mi minHeight maxHeight
+                let minHeight = minHeight |> Mod.map2 ( fun w h -> if w then (if h < 0.0 then 0.0 else h) else h ) waterEnabled
+
+                let colorShader = Shader.withColor (Mod.constant true) minHeight maxHeight
 
                 aset {
                     let! floor = floor
                     yield floorISg floor
                 }   |> Sg.set
-                    |> Sg.effect [  Shader.withWater waterEnabled   |> toEffect
+                    |> Shader.setUniformColorsAndRanges c colorranges mi
+                    |> Sg.effect [  
                                     colorShader                     |> toEffect
+                                    Shader.withWater waterEnabled   |> toEffect
                                     DefaultSurfaces.trafo           |> toEffect 
                                     DefaultSurfaces.vertexColor     |> toEffect 
                                     DefaultSurfaces.simpleLighting  |> toEffect]
@@ -314,7 +354,13 @@ module Visuals =
                 Int32.Parse(string obj)
 
         module Events =
-            
+            open System.Windows
+            let modColorPicker (colorPicker:DropDownCustomColorPicker.CustomColorPicker) : IMod<C4f> =
+                let c4fOfColor (c:Media.Color) : C4f = C4b(c.R,c.G,c.B,c.A).ToC4f()
+                let res = colorPicker.SelectedColor |> c4fOfColor |> Mod.init
+                colorPicker.add_SelectedColorChanged ( fun nv -> transact( fun _ -> c4fOfColor nv |> Mod.change res) )
+                res :> IMod<_>
+
             let modSlider (slider:System.Windows.Controls.Slider) =
                 let res = float slider.Value |> Mod.init
                 slider.ValueChanged.Add ( fun v -> transact ( fun _ -> float v.NewValue |> Mod.change res ))
@@ -371,6 +417,63 @@ module Visuals =
 
         let waterEnabledInput ( win : MainWindow ) =
             win.waterenabledcheckbox |> Events.modCheckbox
+
+        let colorsAndRanges ( win : MainWindow ) : IMod<C4f[]> * IMod<float[]> =
+            
+            let (c0,r0) = win.colorpicker0 |> Events.modColorPicker, win.rangepicker0 |> Events.modSlider
+            let (c1,r1) = win.colorpicker1 |> Events.modColorPicker, win.rangepicker1 |> Events.modSlider
+            let (c2,r2) = win.colorpicker2 |> Events.modColorPicker, win.rangepicker2 |> Events.modSlider
+            let (c3,r3) = win.colorpicker3 |> Events.modColorPicker, win.rangepicker3 |> Events.modSlider
+            let (c4,r4) = win.colorpicker4 |> Events.modColorPicker, win.rangepicker4 |> Events.modSlider
+            let (c5,r5) = win.colorpicker5 |> Events.modColorPicker, win.rangepicker5 |> Events.modSlider
+            let (c6,r6) = win.colorpicker6 |> Events.modColorPicker, win.rangepicker6 |> Events.modSlider
+            let (c7,r7) = win.colorpicker7 |> Events.modColorPicker, win.rangepicker7 |> Events.modSlider
+
+            let cs = adaptive {
+                let! c0 = c0
+                let! c1 = c1
+                let! c2 = c2
+                let! c3 = c3
+                let! c4 = c4
+                let! c5 = c5
+                let! c6 = c6
+                let! c7 = c7
+                return 
+                    [| 
+                        c0
+                        c1
+                        c2
+                        c3
+                        c4
+                        c5
+                        c6
+                        c7
+                    |]
+            }
+
+            let rs = adaptive {
+                let! r0 = r0
+                let! r1 = r1
+                let! r2 = r2
+                let! r3 = r3
+                let! r4 = r4
+                let! r5 = r5
+                let! r6 = r6
+                let! r7 = r7
+                return 
+                    [| 
+                        r0
+                        r1
+                        r2
+                        r3
+                        r4
+                        r5
+                        r6
+                        r7
+                    |]
+            }
+
+            cs,rs
 
         //using an explicit callback here instead of the WPF marking callback because its shorter to write.
         let displayLabel ( msg : IMod<string> ) ( lab : Windows.Controls.Label ) =
