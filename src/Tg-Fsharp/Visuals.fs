@@ -143,8 +143,8 @@ module Visuals =
                     return Frustum.perspective 60.0 0.1 1000.0 (float ar.X/float ar.Y)
                 }
 
-            let cam = 
-                let initialCam = CameraView.LookAt (V3d(0.0,0.0,0.0), V3d(6.0,1.0,1.0))
+            let mutable cam = 
+                let initialCam = CameraView.LookAt (V3d(-30.0,-30.0,30.0), V3d(0.0,0.0,10.0))
                 DefaultCameraController.control rc.Mouse rc.Keyboard rc.Time initialCam
                     
             let setRender (sg : ISg) = 
@@ -341,3 +341,8 @@ module Visuals =
 
         let waterEnabledInput ( win : MainWindow ) =
             win.waterenabledcheckbox |> Events.modCheckbox
+
+        //using an explicit callback here instead of the WPF marking callback because its shorter to write.
+        let displayLabel ( msg : IMod<string> ) ( lab : Windows.Controls.Label ) =
+            msg |> Mod.unsafeRegisterCallbackKeepDisposable        
+                ( fun ns -> lab.Content <- ns) 

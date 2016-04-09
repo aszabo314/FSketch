@@ -36,10 +36,14 @@ module Program =
 
         let floor = Terrain.withParams terrainlevel sigma roughness flatness
 
-        let rendering : RenderControl = Visuals.Scenegraph.ofFloor floor scale height waterEnabled colors
+        let rc : RenderControl = Visuals.Scenegraph.ofFloor floor scale height waterEnabled colors
 
         //RenderControl is a WPF ContentControl that contains some OpenGL rendering output. 
         //Set it as the child of some other visible control to display it.
-        win.renderingcontrol.Content <- rendering :> obj
+        win.renderingcontrol.Content <- rc :> obj
+
+        //connect a WPF display element with a mod
+        let camStatus = Visuals.Scenegraph.Context.cam |> Mod.map ( fun cv -> String.Format("camera = {0:00.00}",cv.Location) )
+        XAMLHelpers.displayLabel camStatus win.camerapositionlabel |> ignore
 
         csapp.Run(win)
