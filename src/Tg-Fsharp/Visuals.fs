@@ -54,22 +54,44 @@ module Visuals =
                         }
             }
 
-        let withColor ( enabled : IMod<bool> ) ( colors : IMod<V4d[]> ) ( heights : IMod<float[]> ) ( v : Vertex ) =
-            let linear (x : float) (cs : V4d[]) (hs : float[]) : V4d =
-                let mutable currentIndex = 0
-                let mutable lastIndex = 0
-                let mutable running = true
-                while running do
-                    failwith ""
-                failwith ""
+        let withColor ( enabled : IMod<bool> ) ( colors : V4d[] ) ( heights : float[] ) ( maxIndex : int ) 
+                      ( minTerrainHeight : IMod<float> ) ( maxTerrainHeight : IMod<float> ) ( v : Vertex ) =
 
+            
+//                    let ocol = 
+//                        let mutable currentIndex = 0
+//                        let mutable lastIndex = 0
+//                        let mutable running = true
+//                        let mutable outColor = V4d(1.0,1.0,1.0,1.0)
+//                        while running do
+//                            if currentIndex < maxIndex then
+//                                let height = hs.[currentIndex]
+//                                if height < normheight then 
+//                                    //found
+//                                    outColor <- cs.[lastIndex]
+//                                    running <- false
+//                                else
+//                                    //not found
+//                                    lastIndex <- currentIndex
+//                                    currentIndex <- currentIndex + 1
+//                            else //last one
+//                                outColor <- cs.[maxIndex]
+//                                running <- false
+//                        outColor
 
             vertex {
+
                 let enabled = !!enabled
                 if enabled then
-                    let cs = !!colors
-                    let hs = !!heights
+                    let cs = colors
+                    let hs = heights
+                    let smallest = !!minTerrainHeight
+                    let biggest = !!maxTerrainHeight
+                    let maxIdx = float maxIndex
                     let height = v.pos.Z
+                    let normheight = ( height - smallest ) / ( biggest - smallest )
+                    let idx = int (round(normheight * maxIdx))
+                    let ocol = cs.[idx]
                     return   
                         {
                             pos =   v.pos
@@ -77,7 +99,7 @@ module Visuals =
                             n =     v.n
                             b =     v.b
                             t =     v.t
-                            c =     v.c
+                            c =     ocol
                             tc =    v.tc
                         }
                 else return   
@@ -153,9 +175,13 @@ module Visuals =
 //                        |> DefaultOverlays.withStatistics
 
         //this is a RenderControl that depends on one Floor as its content
-        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( height : IMod<float> ) 
-                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[] * float[]>) =
+        let ofFloor ( floor : IMod<Terrain.Floor * float * float > ) ( scale : IMod<float> ) ( height : IMod<float> ) 
+                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[] * float[] * int>) =
             
+            let minHeight = floor |> Mod.map ( fun (_,x,_) -> x )
+            let maxHeight = floor |> Mod.map ( fun (_,_,x) -> x )
+            let floor = floor     |> Mod.map ( fun (f,_,_) -> f )
+
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
 
@@ -258,14 +284,18 @@ module Visuals =
                 res
 
             let sg = 
-                let c = colors |> Mod.map fst
-                let h = colors |> Mod.map snd
+                let c =  colors |> Mod.map ( fun (x,_,_) -> x |> Array.map ( fun c -> c.ToV4d() ) ) |> Mod.force
+                let h =  colors |> Mod.map ( fun (_,x,_) -> x ) |> Mod.force
+                let mi = colors |> Mod.map ( fun (_,_,x) -> x ) |> Mod.force
                 
+                let colorShader = Shader.withColor (Mod.constant true) c h mi minHeight maxHeight
+
                 aset {
                     let! floor = floor
                     yield floorISg floor
                 }   |> Sg.set
                     |> Sg.effect [  Shader.withWater waterEnabled   |> toEffect
+                                    colorShader                     |> toEffect
                                     DefaultSurfaces.trafo           |> toEffect 
                                     DefaultSurfaces.vertexColor     |> toEffect 
                                     DefaultSurfaces.simpleLighting  |> toEffect]

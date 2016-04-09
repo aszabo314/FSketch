@@ -29,7 +29,7 @@ module Program =
         let flatness =      XAMLHelpers.flatnessInput win
 
         let waterEnabled =  XAMLHelpers.waterEnabledInput win
-        let colors =        Mod.constant ( [| C4f.Green; C4f.Yellow |], [| 0.5; 1.0 |] )
+        let colors =        Mod.constant ( [| C4f.Green; C4f.Yellow |], [| 0.5; 1.0 |], 1 )
 
         let scale =         XAMLHelpers.terrainScaleInput win
         let height =        XAMLHelpers.terrainHeightInput win
@@ -42,8 +42,13 @@ module Program =
         //Set it as the child of some other visible control to display it.
         win.renderingcontrol.Content <- rc :> obj
 
-        //connect a WPF display element with a mod
+        //connect WPF display elements with  mods
         let camStatus = Visuals.Scenegraph.Context.cam |> Mod.map ( fun cv -> String.Format("camera = {0:00.00}",cv.Location) )
         XAMLHelpers.displayLabel camStatus win.camerapositionlabel |> ignore
+
+        let highestHeight = floor |> Mod.map ( fun (_,_,h) -> String.Format("Highest Peak = {0:00.00}", h))
+        let lowestHeight = floor |> Mod.map ( fun (_,h,_) -> String.Format("Lowest Valley = {0:00.00}", h))
+        XAMLHelpers.displayLabel highestHeight win.maxheightlabel |> ignore
+        XAMLHelpers.displayLabel lowestHeight win.minheightlabel |> ignore
 
         csapp.Run(win)

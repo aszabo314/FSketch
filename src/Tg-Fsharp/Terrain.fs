@@ -127,12 +127,43 @@ module Terrain =
             res
 
     let withParams ( level : IMod<int> ) ( sigma : IMod<float> ) ( roughness : IMod<float> ) ( flatness : IMod<float> ) =
+        let minHeight (floor : Floor) =
+            let rec findMin (f : Floor) (cur : float) : float =
+                let smallest =
+                    min (min (min (min f.Corners.TopLeft.Height f.Corners.TopRight.Height) f.Corners.BotLeft.Height) f.Corners.BotRight.Height) cur
+                match f.After with
+                | None -> smallest
+                | Some a ->
+                    let tl = findMin a.TopLeft  smallest
+                    let tr = findMin a.TopRight smallest
+                    let bl = findMin a.BotLeft  smallest
+                    let br = findMin a.BotRight smallest
+                    min (min (min tl tr) bl) br
+            findMin floor Double.MaxValue
+
+        let maxHeight (floor : Floor) =
+            let rec findMax (f : Floor) (cur : float) : float =
+                let biggest =
+                    max (max (max (max f.Corners.TopLeft.Height f.Corners.TopRight.Height) f.Corners.BotLeft.Height) f.Corners.BotRight.Height) cur
+                match f.After with
+                | None -> biggest
+                | Some a ->
+                    let tl = findMax a.TopLeft  biggest
+                    let tr = findMax a.TopRight biggest
+                    let bl = findMax a.BotLeft  biggest
+                    let br = findMax a.BotRight biggest
+                    max (max (max tl tr) bl) br
+            findMax floor Double.MinValue
+
         adaptive {
             let! maxLv = level
             let! sigma = sigma
             let! roughness = roughness
             let! flatness = flatness
-            return Algorithm.floor maxLv sigma roughness flatness
+            let floor = Algorithm.floor maxLv sigma roughness flatness
+            let valley = minHeight floor
+            let peak = maxHeight floor
+            return floor, valley, peak
         }
 
 module Color =

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="TG" Height="660" Width="1373">
+        Title="Terrain Generator" Height="660" Width="1373">
     <Grid>
         <ContentControl Content="RENDER" x:Name="renderingGoesHere" Margin="267,10,10,10"/>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="10,10,0,10" Width="252">
@@ -55,10 +55,9 @@
                         </Grid>
                     </Border>
                     <Label x:Name="CameraPosition" Content="Camera Position" HorizontalAlignment="Left" Margin="16,544,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="216"/>
+                    <Label x:Name="PeakLabel" Content="High" HorizontalAlignment="Left" Margin="10,214,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="222"/>
+                    <Label x:Name="ValleyLabel" Content="Low" HorizontalAlignment="Left" Margin="10,240,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="222"/>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Rendering">
-                <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
     </Grid>

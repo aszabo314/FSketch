@@ -35,5 +35,7 @@ namespace Tg
         public CheckBox waterenabledcheckbox => (CheckBox)this.FindName("waterEnabledCheckbox");
         public Button terraingenerationbutton => (Button)this.FindName("terrainGenerationButton");
         public Label camerapositionlabel => (Label)this.FindName("CameraPosition");
+        public Label maxheightlabel => (Label)this.FindName("PeakLabel");
+        public Label minheightlabel => (Label)this.FindName("ValleyLabel");
     }
 }
