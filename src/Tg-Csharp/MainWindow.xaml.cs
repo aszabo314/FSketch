@@ -44,6 +44,7 @@ namespace Tg
         public Slider roughnessslider => (Slider)this.FindName("RoughnessSlider");
         public Slider flatnessslider => (Slider)this.FindName("FlatnessSlider");
         public CheckBox waterenabledcheckbox => (CheckBox)this.FindName("waterEnabledCheckbox");
+        public CheckBox colorenabledcheckbox => (CheckBox)this.FindName("colorsEnabledCheckbox");
         public Button terraingenerationbutton => (Button)this.FindName("terrainGenerationButton");
         public Label camerapositionlabel => (Label)this.FindName("CameraPosition");
         public Label maxheightlabel => (Label)this.FindName("PeakLabel");

@@ -121,13 +121,13 @@ module Visuals =
                              else range7
                     let nh = int (floor(oh * maxIdx))
                     let ocol = if      nh = 0 then color0
-                               else if nh = 1 then color1
-                               else if nh = 2 then color2
-                               else if nh = 3 then color3
-                               else if nh = 4 then color4
-                               else if nh = 5 then color5
-                               else if nh = 6 then color6
-                               else if nh = 7 then color7
+                               else if nh = 1 then ( color1 * normheight + color0 * (1.0 - normheight) )
+                               else if nh = 2 then ( color2 * normheight + color1 * (1.0 - normheight) )
+                               else if nh = 3 then ( color3 * normheight + color2 * (1.0 - normheight) )
+                               else if nh = 4 then ( color4 * normheight + color3 * (1.0 - normheight) )
+                               else if nh = 5 then ( color5 * normheight + color4 * (1.0 - normheight) )
+                               else if nh = 6 then ( color6 * normheight + color5 * (1.0 - normheight) )
+                               else if nh = 7 then ( color7 * normheight + color6 * (1.0 - normheight) )
                                else color7
                     return   
                         {
@@ -213,7 +213,7 @@ module Visuals =
 
         //this is a RenderControl that depends on one Floor as its content
         let ofFloor ( floor : IMod<Terrain.Floor * float * float > ) ( scale : IMod<float> ) ( height : IMod<float> ) 
-                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[]> ) ( colorranges : IMod<float[]> ) =
+                    ( waterEnabled : IMod<bool> ) ( colorEnabled : IMod<bool> ) ( colors : IMod<C4f[]> ) ( colorranges : IMod<float[]> ) =
             
             let minHeight = floor |> Mod.map ( fun (_,x,_) -> x )
             let maxHeight = floor |> Mod.map ( fun (_,_,x) -> x )
@@ -326,7 +326,7 @@ module Visuals =
                 
                 let minHeight = minHeight |> Mod.map2 ( fun w h -> if w then (if h < 0.0 then 0.0 else h) else h ) waterEnabled
 
-                let colorShader = Shader.withColor (Mod.constant true) minHeight maxHeight
+                let colorShader = Shader.withColor colorEnabled minHeight maxHeight
 
                 aset {
                     let! floor = floor
@@ -417,6 +417,9 @@ module Visuals =
 
         let waterEnabledInput ( win : MainWindow ) =
             win.waterenabledcheckbox |> Events.modCheckbox
+
+        let colorEnabledInput ( win : MainWindow ) =
+            win.colorenabledcheckbox |> Events.modCheckbox
 
         let colorsAndRanges ( win : MainWindow ) : IMod<C4f[]> * IMod<float[]> =
             

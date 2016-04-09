@@ -29,6 +29,7 @@ module Program =
         let flatness =      XAMLHelpers.flatnessInput win
 
         let waterEnabled =  XAMLHelpers.waterEnabledInput win
+        let colorEnabled =  XAMLHelpers.colorEnabledInput win
         let (colors, colorRanges) = XAMLHelpers.colorsAndRanges win
 
         let scale =         XAMLHelpers.terrainScaleInput win
@@ -36,7 +37,7 @@ module Program =
 
         let floor = Terrain.withParams terrainlevel sigma roughness flatness
 
-        let rc : RenderControl = Visuals.Scenegraph.ofFloor floor scale height waterEnabled colors colorRanges
+        let rc : RenderControl = Visuals.Scenegraph.ofFloor floor scale height waterEnabled colorEnabled colors colorRanges
 
         //RenderControl is a WPF ContentControl that contains some OpenGL rendering output. 
         //Set it as the child of some other visible control to display it.
