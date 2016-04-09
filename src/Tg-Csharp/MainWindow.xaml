@@ -44,18 +44,20 @@
                     <Slider x:Name="FlatnessSlider" Grid.Column="1" Margin="10,105,10,0" VerticalAlignment="Top" Value="0.1" Minimum="0.1" Maximum="7"/>
                     <Label x:Name="label4_Copy1" Content="{Binding Value, ElementName=FlatnessSlider, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="61,101,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="waterEnabledCheckbox" Content="Water" HorizontalAlignment="Left" Margin="10,287,0,0" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Rendering">
-                <Grid Background="#FFE5E5E5">
-                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="155" CornerRadius="25" BorderBrush="Black">
+                    <Border BorderThickness="1" HorizontalAlignment="Left" Height="129" Margin="0,439,0,0" VerticalAlignment="Top" Width="155" CornerRadius="25" BorderBrush="Black" Grid.ColumnSpan="2">
                         <Grid HorizontalAlignment="Left" Height="100" Margin="-1" VerticalAlignment="Top" Width="155">
                             <Slider x:Name="TerrainScale" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Margin="10,37,0,0" Maximum="1000" Minimum="1" Value="50"/>
                             <Label x:Name="label1" Content="Scale: " Margin="10,10,85,59"/>
                             <Label x:Name="label2" Content="{Binding Value, ElementName=TerrainScale, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="116,10,0,0" VerticalAlignment="Top"/>
+                            <Slider x:Name="TerrainHeight" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Margin="10,91,0,-13" Maximum="2" Value="1"/>
+                            <Label x:Name="label1_Copy" Content="Height:" Margin="10,64,85,5"/>
+                            <Label x:Name="label2_Copy" Content="{Binding Value, ElementName=TerrainHeight, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="116,64,0,0" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Rendering">
+                <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
     </Grid>

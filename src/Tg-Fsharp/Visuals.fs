@@ -153,8 +153,8 @@ module Visuals =
 //                        |> DefaultOverlays.withStatistics
 
         //this is a RenderControl that depends on one Floor as its content
-        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( waterEnabled : IMod<bool> )
-                    ( colors : IMod<C4f[] * float[]>) =
+        let ofFloor ( floor : IMod<Terrain.Floor> ) ( scale : IMod<float> ) ( height : IMod<float> ) 
+                    ( waterEnabled : IMod<bool> ) ( colors : IMod<C4f[] * float[]>) =
             
             let vfp ( x : FloorPoint ) =
                 V3d( x.Pos.X, x.Pos.Y, x.Height )
@@ -270,6 +270,7 @@ module Visuals =
                                     DefaultSurfaces.vertexColor     |> toEffect 
                                     DefaultSurfaces.simpleLighting  |> toEffect]
                     |> Sg.trafo ( scale |> Mod.map ( fun s -> Trafo3d.Scale s ) )
+                    |> Sg.trafo ( height |> Mod.map ( fun s -> Trafo3d.Scale ( V3d(1.0, 1.0, s ) ) ))
                     |> Sg.viewTrafo ( Context.cam |> Mod.map ( fun v -> CameraView.viewTrafo v ))
                     |> Sg.projTrafo ( Context.frustum |> Mod.map ( fun v -> Frustum.projTrafo v))
             
@@ -283,6 +284,11 @@ module Visuals =
                 Int32.Parse(string obj)
 
         module Events =
+            
+            let modSlider (slider:System.Windows.Controls.Slider) =
+                let res = float slider.Value |> Mod.init
+                slider.ValueChanged.Add ( fun v -> transact ( fun _ -> float v.NewValue |> Mod.change res ))
+                res :> IMod<_>
 
             //why
             let private wtf (b : Nullable<bool>) = if not b.HasValue then false else b.Value
@@ -312,10 +318,11 @@ module Visuals =
             Events.intSlider button slider
 
         let terrainScaleInput ( win : MainWindow ) =
-            let slider = win.terrainscaleslider
-            let res = float slider.Value |> Mod.init
-            slider.ValueChanged.Add ( fun v -> transact ( fun _ -> float v.NewValue |> Mod.change res ))
-            res :> IMod<_>
+            win.terrainscaleslider |> Events.modSlider
+
+        let terrainHeightInput ( win : MainWindow ) =
+            win.terrainheightslider |> Events.modSlider
+            
 
         let sigmaInput ( win : MainWindow ) =
             let slider = win.sigmaslider
