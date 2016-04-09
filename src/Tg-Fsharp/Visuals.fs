@@ -83,6 +83,7 @@ module Visuals =
                         }
             }
 
+        // if color is enabled, every vertex receives a color from a color map (linear interpolation)
         let withColor ( enabled : IMod<bool> ) ( minTerrainHeight : IMod<float> ) ( maxTerrainHeight : IMod<float> ) ( v : Vertex ) =
             vertex {
                 let color0 = uniform.Color0
@@ -106,29 +107,24 @@ module Visuals =
                 if enabled then
                     let smallest = !!minTerrainHeight
                     let biggest = !!maxTerrainHeight
-                    let maxIdx = float maxIndex
                     let height = v.pos.Z
-                    let normheight = ( height - smallest ) / ( biggest - smallest )
-                    let idx = int (floor(normheight * maxIdx))
-                    let oh = if      idx = 0 then range0
-                             else if idx = 1 then range1
-                             else if idx = 2 then range2
-                             else if idx = 3 then range3
-                             else if idx = 4 then range4
-                             else if idx = 5 then range5
-                             else if idx = 6 then range6
-                             else if idx = 7 then range7
-                             else range7
-                    let nh = int (floor(oh * maxIdx))
-                    let ocol = if      nh = 0 then color0
-                               else if nh = 1 then ( color1 * normheight + color0 * (1.0 - normheight) )
-                               else if nh = 2 then ( color2 * normheight + color1 * (1.0 - normheight) )
-                               else if nh = 3 then ( color3 * normheight + color2 * (1.0 - normheight) )
-                               else if nh = 4 then ( color4 * normheight + color3 * (1.0 - normheight) )
-                               else if nh = 5 then ( color5 * normheight + color4 * (1.0 - normheight) )
-                               else if nh = 6 then ( color6 * normheight + color5 * (1.0 - normheight) )
-                               else if nh = 7 then ( color7 * normheight + color6 * (1.0 - normheight) )
-                               else color7
+                    let x = ( height - smallest ) / ( biggest - smallest )
+                    let ocol =  if x    <   range0 then color0
+                                else if x    <   range1 then let y = ( x - range0 ) / ( range1 - range0 ) 
+                                                             ( color1 * y ) + ( color0 * ( 1.0 - y ) )
+                                else if x    <   range2 then let y = ( x - range1 ) / ( range2 - range1 ) 
+                                                             ( color2 * y ) + ( color1 * ( 1.0 - y ))
+                                else if x    <   range3 then let y = ( x - range2 ) / ( range3 - range2 ) 
+                                                             ( color3 * y ) + ( color2 * ( 1.0 - y ))
+                                else if x    <   range4 then let y = ( x - range3 ) / ( range4 - range3 )
+                                                             ( color4 * y ) + ( color3 * ( 1.0 - y ))
+                                else if x    <   range5 then let y = ( x - range4 ) / ( range5 - range4 )
+                                                             ( color5 * y ) + ( color4 * ( 1.0 - y ))
+                                else if x    <   range6 then let y = ( x - range5 ) / ( range6 - range5 )
+                                                             ( color6 * y ) + ( color5 * ( 1.0 - y ))
+                                else if x    <   range7 then let y = ( x - range6 ) / ( range7 - range6 )
+                                                             ( color7 * y ) + ( color6 * ( 1.0 - y ))
+                                else color7
                     return   
                         {
                             pos =   v.pos
@@ -182,7 +178,6 @@ module Visuals =
 
         open RenderInfo
                     
-                
 
         //represents one rendering context consisting of:
         // - one RenderControl ( = what you see )

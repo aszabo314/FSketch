@@ -66,14 +66,14 @@
                     <cp:CustomColorPicker Width="40" x:Name="ColorPicker5" Margin="10,382,49,173.54"/>
                     <cp:CustomColorPicker Width="40" x:Name="ColorPicker6" Margin="10,404,49,152.54"/>
                     <cp:CustomColorPicker Width="40" x:Name="ColorPicker7" Margin="10,426,49,129.54"/>
-                    <Slider x:Name="RangePicker0" HorizontalAlignment="Left" Margin="55,272,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.125"  />
-                    <Slider x:Name="RangePicker1" HorizontalAlignment="Left" Margin="55,294,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.25"   />
-                    <Slider x:Name="RangePicker2" HorizontalAlignment="Left" Margin="55,316,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.375"  />
-                    <Slider x:Name="RangePicker3" HorizontalAlignment="Left" Margin="55,338,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.5"    />
-                    <Slider x:Name="RangePicker4" HorizontalAlignment="Left" Margin="55,360,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.625"  />
-                    <Slider x:Name="RangePicker5" HorizontalAlignment="Left" Margin="55,382,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.75"   />
-                    <Slider x:Name="RangePicker6" HorizontalAlignment="Left" Margin="55,404,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="0.875"  />
-                    <Slider x:Name="RangePicker7" HorizontalAlignment="Left" Margin="55,426,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="1" Value="1.0"    />
+                    <Slider x:Name="RangePicker0" HorizontalAlignment="Left" Margin="55,272,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.125" Minimum="0.001"   />
+                    <Slider x:Name="RangePicker1" HorizontalAlignment="Left" Margin="55,294,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.25"  Minimum="0.001"   />
+                    <Slider x:Name="RangePicker2" HorizontalAlignment="Left" Margin="55,316,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.375" Minimum="0.001"   />
+                    <Slider x:Name="RangePicker3" HorizontalAlignment="Left" Margin="55,338,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.5"   Minimum="0.001"   />
+                    <Slider x:Name="RangePicker4" HorizontalAlignment="Left" Margin="55,360,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.625" Minimum="0.001"   />
+                    <Slider x:Name="RangePicker5" HorizontalAlignment="Left" Margin="55,382,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.75"  Minimum="0.001"   />
+                    <Slider x:Name="RangePicker6" HorizontalAlignment="Left" Margin="55,404,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="0.875" Minimum="0.001"   />
+                    <Slider x:Name="RangePicker7" HorizontalAlignment="Left" Margin="55,426,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.833,-0.18" Grid.ColumnSpan="2" Width="177" Maximum="0.999"    Value="1.0"   Minimum="0.001"   />
                     <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="197" Margin="0,259,0,0" VerticalAlignment="Top" Width="242"/>
                     <CheckBox x:Name="colorsEnabledCheckbox" Content="Enable Colors" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top" Grid.Column="1" IsChecked="True"/>
 
