@@ -10,8 +10,6 @@ open Aardvark.Application.WPF
 
 open Aardvark.SceneGraph
 
-open Aardvark.Rendering.NanoVg
-
 //This module contains some helper functions that map the values of certain WPF controls to IMods.
 //That can be done by initializing a ModRef and setting callbacks on ValueChange events (or ButtonClick events or other events)
 //to update the value of the ModRef. The ModRef is then exposed as an immutable IMod to the outside.
@@ -174,8 +172,10 @@ module Context =
                 
     let setRender (sg : ISg) = 
         rc.RenderTask <- 
-            oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.ManagedOptimized, sg) 
-                    |> DefaultOverlays.withStatistics
+            RenderTask.ofList[
+                oglapp.Runtime.CompileClear(rc.FramebufferSignature, Mod.constant <| C4b(174,234,255).ToC4f() )
+                oglapp.Runtime.CompileRender(rc.FramebufferSignature, BackendConfiguration.ManagedOptimized, sg) 
+                ]
 
 
 

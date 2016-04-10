@@ -6,7 +6,7 @@
         xmlns:cp="clr-namespace:DropDownCustomColorPicker;assembly=CustomColorPicker"
         xmlns:local="clr-namespace:Tg_Csharp"
         mc:Ignorable="d"
-        Title="Terrain Generator" Height="729.834" Width="1373">
+        Title="Terrain Generator" Height="756.834" Width="1373">
     <Grid>
         <ContentControl Content="RENDER" x:Name="renderingGoesHere" Margin="267,10,10,10"/>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Margin="10,10,0,10" Width="252">
